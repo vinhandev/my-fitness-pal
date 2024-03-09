@@ -6,7 +6,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text>Hello World </Text>
-      <Link href="/dashboard">Go to Dashboard</Link>
+      <Link href="/search">Go to Search</Link>
       <StatusBar style="auto" />
     </View>
   );
