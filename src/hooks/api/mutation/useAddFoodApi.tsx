@@ -18,5 +18,7 @@ const mutation = gql`
   }
 `;
 export const useAddFoodApi = () => {
-  return useMutation(mutation);
+  return useMutation(mutation,{
+    refetchQueries: ['logFoods'],
+  });
 };
