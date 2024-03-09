@@ -1,0 +1,3 @@
+schema @sdl(files: ["edamamQuery/index.graphql"]) {
+  query: Query
+}
