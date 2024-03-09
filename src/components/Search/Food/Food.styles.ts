@@ -13,6 +13,9 @@ export const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: Colors.neutral,
   },
+  content: {
+    flex: 1,
+  },
   text1: {
     fontSize: FontSizes.small,
     fontWeight: FontWeights.regular,
@@ -23,6 +26,7 @@ export const styles = StyleSheet.create({
     color: Colors.text2,
   },
   title: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     gap: Sizes.gap,

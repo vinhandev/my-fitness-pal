@@ -20,16 +20,18 @@ export default function Food({ food, onAddFood }: Props) {
 
   return (
     <View style={styles.container}>
-      <View>
+      <View style={styles.content}>
         <View style={styles.title}>
-          <Text style={styles.text1}>{food.name}</Text>
-          {isVerified && (
-            <Icon
-              variant="verified"
-              color={Colors.secondary}
-              size={Sizes.smallIcon}
-            />
-          )}
+          <Text style={styles.text1}>
+            {`${food.name} `} 
+            {isVerified && (
+              <Icon
+                variant="verified"
+                color={Colors.secondary}
+                size={Sizes.smallIcon}
+              />
+            )}
+          </Text>
         </View>
         <Text style={styles.text2}>{description}</Text>
       </View>
