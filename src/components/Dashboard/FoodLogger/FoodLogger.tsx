@@ -35,7 +35,9 @@ export default function FoodLogger({ meals, onAddFood }: Props) {
     <FlatList
       contentContainerStyle={styles.list}
       data={meals}
-      renderItem={({ item }) => <Meal meal={item} onAdd={onAddFood} />}
+      renderItem={({ item }) => (
+        <Meal key={item.name} meal={item} onAdd={onAddFood} />
+      )}
     />
   );
 }

@@ -1,5 +1,5 @@
 import { gql, useLazyQuery, useQuery } from '@apollo/client';
-import { FoodData } from '../../types';
+import { FoodData } from '../../../types';
 import { useMemo } from 'react';
 
 const query = gql`
@@ -24,6 +24,7 @@ export const useSearchApi = () => {
   const result: FoodData[] = useMemo(() => {
     const tmpResult: FoodData[] =
       data?.search?.hints?.map((hint) => ({
+        id: hint.food.foodId,
         name: hint.food.label,
         kcal: hint.food.nutrients.ENERC_KCAL,
         quantity: 0,

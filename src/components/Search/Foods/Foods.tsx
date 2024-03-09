@@ -25,7 +25,7 @@ export default function Foods({ data, onAddFood, loading }: Props) {
       contentContainerStyle={styles.list}
       data={data}
       renderItem={({ item }) => (
-        <Food food={item} onAddFood={() => onAddFood(item)} />
+        <Food key={item.name} variant="add" food={item} onAddFood={() => onAddFood(item)} />
       )}
     />
   );

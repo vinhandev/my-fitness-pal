@@ -13,8 +13,9 @@ import { styles } from './Search.styles';
 
 import { useMemo, useState } from 'react';
 import { FoodData, SelectorData } from '../../types';
-import { useSearchApi } from '../../hooks';
+import { useAddFoodApi, useSearchApi } from '../../hooks';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
 
 export default function Search() {
   const whenToEatData: SelectorData[] = [
@@ -52,9 +53,20 @@ export default function Search() {
   const [selectedFoods, setSelectedFoods] = useState<FoodData[]>([]);
 
   const { data, loading, error, search } = useSearchApi();
+  const [addFood] = useAddFoodApi();
 
-  const handleAddSelectedFood = (food: FoodData) => {
-    setSelectedFoods([...selectedFoods, food]);
+  const handleAddSelectedFood = async (food: FoodData) => {
+    console.log('food', food);
+    
+    await addFood({
+      variables: {
+        user_id: 'vinhan',
+        food_id: food.id,
+        kcal: food.kcal,
+        label: food.name,
+      },
+    });
+    router.back();
   };
 
   const handleSearchValue = async () => {
