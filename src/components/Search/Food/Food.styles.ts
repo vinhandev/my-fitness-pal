@@ -7,6 +7,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
 
+    marginHorizontal:Sizes.paddingHorizontal,
     paddingHorizontal: Sizes.paddingVertical,
     paddingVertical: Sizes.paddingVertical,
 
