@@ -1,4 +1,4 @@
-import { Text, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 
 import {
   Ads,
@@ -13,6 +13,8 @@ import { styles } from './Search.styles';
 
 import { useMemo, useState } from 'react';
 import { FoodData, SelectorData } from '../../types';
+import { useSearchApi } from '../../hooks';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Search() {
   const foodData: FoodData[] = [
@@ -121,7 +123,7 @@ export default function Search() {
       isVerified: false,
     },
   ];
-  const data: SelectorData[] = [
+  const whenToEatData: SelectorData[] = [
     {
       label: 'Breakfast',
       value: 'Breakfast',
@@ -149,39 +151,73 @@ export default function Search() {
       value: 'My Foods',
     },
   ];
-  const [searchValue, setSearchValue] = useState('Pizza');
-  const [value, setValue] = useState(data[0].value);
+  const [food, setFood] = useState('Pizza');
+  const [value, setValue] = useState(whenToEatData[0].value);
   const [type, setType] = useState('');
   const [isVerified, setIsVerified] = useState(false);
   const [selectedFoods, setSelectedFoods] = useState<FoodData[]>([]);
+
+  const { data, loading, error, search } = useSearchApi();
 
   const handleAddSelectedFood = (food: FoodData) => {
     setSelectedFoods([...selectedFoods, food]);
   };
 
-  const handleSearchValue = () => {};
+  const handleSearchValue = async () => {
+    await search({
+      variables: {
+        ingr: food,
+      },
+    });
+  };
 
   const filteredFoods = useMemo(() => {
-    return foodData.filter((food) => {
+    return data?.filter((food) => {
       if (isVerified) {
         return food.isVerified;
       }
       return food;
     });
-  }, [foodData, searchValue]);
+  }, [foodData, food]);
+
+  if (loading) {
+    return (
+      <View style={styles.containerCenter}>
+        <ActivityIndicator />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.containerCenter}>
+        <Text>{`Failed to search: ${error.message}`}</Text>
+      </View>
+    );
+  }
 
   return (
-    <View style={styles.container}>
-      <Header variant="search" data={data} value={value} onChange={setValue} />
-      <SearchBar
-        searchValue={searchValue}
-        onChangeSearchValue={setSearchValue}
-        onSearch={handleSearchValue}
-      />
-      <NavigationBar data={types} type={type} onChangeType={setType} />
-      <SearchTitle isVerified={isVerified} onChangeIsVerified={setIsVerified} />
-      <Foods data={filteredFoods} onAddFood={handleAddSelectedFood} />
-      <Ads />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
+        <Header
+          variant="search"
+          data={whenToEatData}
+          value={value}
+          onChange={setValue}
+        />
+        <SearchBar
+          searchValue={food}
+          onChangeSearchValue={setFood}
+          onSearch={handleSearchValue}
+        />
+        <NavigationBar data={types} type={type} onChangeType={setType} />
+        <SearchTitle
+          isVerified={isVerified}
+          onChangeIsVerified={setIsVerified}
+        />
+        <Foods data={filteredFoods} onAddFood={handleAddSelectedFood} />
+        <Ads />
+      </View>
+    </SafeAreaView>
   );
 }

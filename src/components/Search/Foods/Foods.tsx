@@ -14,6 +14,11 @@ export default function Foods({ data, onAddFood }: Props) {
   return (
     <View style={styles.container}>
       <FlatList
+        ListEmptyComponent={
+          <View style={styles.containerEmpty}>
+            <Text>No food found</Text>
+          </View>
+        }
         contentContainerStyle={styles.list}
         data={data}
         renderItem={({ item }) => (
