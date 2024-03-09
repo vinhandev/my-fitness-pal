@@ -159,6 +159,8 @@ export default function Search() {
     setSelectedFoods([...selectedFoods, food]);
   };
 
+  const handleSearchValue = () => {};
+
   const filteredFoods = useMemo(() => {
     return foodData.filter((food) => {
       if (isVerified) {
@@ -174,6 +176,7 @@ export default function Search() {
       <SearchBar
         searchValue={searchValue}
         onChangeSearchValue={setSearchValue}
+        onSearch={handleSearchValue}
       />
       <NavigationBar data={types} type={type} onChangeType={setType} />
       <SearchTitle isVerified={isVerified} onChangeIsVerified={setIsVerified} />

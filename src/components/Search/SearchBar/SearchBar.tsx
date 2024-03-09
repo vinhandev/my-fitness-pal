@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Button, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { styles } from './SearchBar.styles';
 import Icon from '../../Icon/Icon';
@@ -9,14 +9,16 @@ import { Colors, Sizes } from '../../../assets';
 type Props = {
   searchValue: string;
   onChangeSearchValue: (value: string) => void;
+  onSearch: () => void;
 };
-export default function SearchBar({ searchValue, onChangeSearchValue }: Props) {
+export default function SearchBar({
+  searchValue,
+  onChangeSearchValue,
+  onSearch,
+}: Props) {
   const handleClearData = () => {
     onChangeSearchValue('');
   };
-
-  const handleSearchValue = () => (e) =>
-    onChangeSearchValue(e.nativeEvent.text);
 
   return (
     <View style={styles.container}>
@@ -25,13 +27,14 @@ export default function SearchBar({ searchValue, onChangeSearchValue }: Props) {
         <TextInput
           style={styles.input}
           value={searchValue}
-          onChange={handleSearchValue}
-          placeholder='Search...'
+          onChangeText={onChangeSearchValue}
+          placeholder="Search..."
         />
         <TouchableOpacity onPress={handleClearData} style={styles.iconClose}>
           <Icon variant="close" size={Sizes.bigIcon} color={Colors.text2} />
         </TouchableOpacity>
       </View>
+      {searchValue && <Button onPress={onSearch} title="Search" />}
     </View>
   );
 }
