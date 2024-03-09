@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
 
     flexGrow: 1,
   },
-  separator: {
-    height: Sizes.gap,
+  list: {
+    gap: 10,
   },
 });

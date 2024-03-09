@@ -14,7 +14,7 @@ export default function Foods({ data, onAddFood }: Props) {
   return (
     <View style={styles.container}>
       <FlatList
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        contentContainerStyle={styles.list}
         data={data}
         renderItem={({ item }) => (
           <Food food={item} onAddFood={() => onAddFood(item)} />
