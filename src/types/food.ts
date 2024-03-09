@@ -6,3 +6,9 @@ export type FoodData = {
   from: string;
   isVerified: boolean;
 };
+
+export type MealData = {
+  name: string;
+  kcal: number;
+  foods: FoodData[];
+};

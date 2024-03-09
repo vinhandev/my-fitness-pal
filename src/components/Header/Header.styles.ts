@@ -1,10 +1,12 @@
 import { StyleSheet } from 'react-native';
-import { Sizes } from '../../assets';
+import { Colors, FontSizes, FontWeights, Sizes } from '../../assets';
 
 export const styles = StyleSheet.create({
   container: {
+    backgroundColor: Colors.white,
+    
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
 
     paddingHorizontal: Sizes.paddingHorizontal,
@@ -12,12 +14,16 @@ export const styles = StyleSheet.create({
   },
   selector: {
     position: 'absolute',
-    left: 0,
-    right: 0,
+    left: Sizes.paddingHorizontal,
     top: 0,
     bottom: 0,
 
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  text: {
+    fontSize: FontSizes.big,
+    fontWeight: FontWeights.bold,
+    color: Colors.black,
   },
 });

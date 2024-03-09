@@ -2,7 +2,7 @@ export { default as Header } from './Header/Header';
 export { default as Icon } from './Icon/Icon';
 
 // inputs
-export {default as Selector} from './Inputs/Selector/Selector';
+export { default as Selector } from './Inputs/Selector/Selector';
 
 // search
 export { default as SearchBar } from './Search/SearchBar/SearchBar';
@@ -14,3 +14,7 @@ export { default as SearchTitle } from './Search/SearchTitle/SearchTitle';
 export { default as Food } from './Search/Food/Food';
 export { default as Foods } from './Search/Foods/Foods';
 
+// dashboard
+export { default as Calories } from './Dashboard/Calories/Calories';
+export { default as DashboardAds } from './Dashboard/DashboardAds/DashboardAds';
+export { default as FoodLogger } from './Dashboard/FoodLogger/FoodLogger';

@@ -7,12 +7,18 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
 
-    marginHorizontal:Sizes.paddingHorizontal,
+    marginHorizontal: Sizes.paddingHorizontal,
     paddingHorizontal: Sizes.paddingVertical,
     paddingVertical: Sizes.paddingVertical,
 
     borderRadius: 5,
     backgroundColor: Colors.neutral,
+  },
+  containerLog: {
+    paddingHorizontal: Sizes.paddingHorizontal,
+    paddingVertical: Sizes.paddingVertical,
+
+    backgroundColor: Colors.white,
   },
   content: {
     flex: 1,

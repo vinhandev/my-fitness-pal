@@ -1,4 +1,4 @@
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, Text, View } from 'react-native';
 
 import {
   Ads,
@@ -17,112 +17,6 @@ import { useSearchApi } from '../../hooks';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Search() {
-  const foodData: FoodData[] = [
-    {
-      name: 'Pizza',
-      kcal: 300,
-      quantity: 1,
-      unitType: 'slice',
-      from: 'Pizza Pizaa',
-      isVerified: true,
-    },
-    {
-      name: 'Hamburger',
-      kcal: 300,
-      quantity: 1,
-      unitType: 'slice',
-      from: 'Hamburger Pizaa',
-      isVerified: false,
-    },
-    {
-      name: 'Hamburger',
-      kcal: 300,
-      quantity: 1,
-      unitType: 'slice',
-      from: 'Hamburger Pizaa',
-      isVerified: false,
-    },
-    {
-      name: 'Hamburger',
-      kcal: 300,
-      quantity: 1,
-      unitType: 'slice',
-      from: 'Hamburger Pizaa',
-      isVerified: false,
-    },
-    {
-      name: 'Hamburger',
-      kcal: 300,
-      quantity: 1,
-      unitType: 'slice',
-      from: 'Hamburger Pizaa',
-      isVerified: false,
-    },
-    {
-      name: 'Hamburger',
-      kcal: 300,
-      quantity: 1,
-      unitType: 'slice',
-      from: 'Hamburger Pizaa',
-      isVerified: false,
-    },
-    {
-      name: 'Hamburger',
-      kcal: 300,
-      quantity: 1,
-      unitType: 'slice',
-      from: 'Hamburger Pizaa',
-      isVerified: false,
-    },
-    {
-      name: 'Hamburger',
-      kcal: 300,
-      quantity: 1,
-      unitType: 'slice',
-      from: 'Hamburger Pizaa',
-      isVerified: false,
-    },
-    {
-      name: 'Hamburger',
-      kcal: 300,
-      quantity: 1,
-      unitType: 'slice',
-      from: 'Hamburger Pizaa',
-      isVerified: false,
-    },
-    {
-      name: 'Hamburger',
-      kcal: 300,
-      quantity: 1,
-      unitType: 'slice',
-      from: 'Hamburger Pizaa',
-      isVerified: false,
-    },
-    {
-      name: 'Hamburger',
-      kcal: 300,
-      quantity: 1,
-      unitType: 'slice',
-      from: 'Hamburger Pizaa',
-      isVerified: false,
-    },
-    {
-      name: 'Hamburger',
-      kcal: 300,
-      quantity: 1,
-      unitType: 'slice',
-      from: 'Hamburger Pizaa',
-      isVerified: false,
-    },
-    {
-      name: 'Hamburger',
-      kcal: 300,
-      quantity: 1,
-      unitType: 'slice',
-      from: 'Hamburger Pizaa',
-      isVerified: false,
-    },
-  ];
   const whenToEatData: SelectorData[] = [
     {
       label: 'Breakfast',
@@ -151,9 +45,9 @@ export default function Search() {
       value: 'My Foods',
     },
   ];
-  const [food, setFood] = useState('Pizza');
+  const [food, setFood] = useState('');
   const [value, setValue] = useState(whenToEatData[0].value);
-  const [type, setType] = useState('');
+  const [type, setType] = useState('All');
   const [isVerified, setIsVerified] = useState(false);
   const [selectedFoods, setSelectedFoods] = useState<FoodData[]>([]);
 
@@ -178,15 +72,7 @@ export default function Search() {
       }
       return food;
     });
-  }, [foodData, food]);
-
-  if (loading) {
-    return (
-      <View style={styles.containerCenter}>
-        <ActivityIndicator />
-      </View>
-    );
-  }
+  }, [food, data]);
 
   if (error) {
     return (
@@ -197,27 +83,26 @@ export default function Search() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.container}>
-        <Header
-          variant="search"
-          data={whenToEatData}
-          value={value}
-          onChange={setValue}
-        />
-        <SearchBar
-          searchValue={food}
-          onChangeSearchValue={setFood}
-          onSearch={handleSearchValue}
-        />
-        <NavigationBar data={types} type={type} onChangeType={setType} />
-        <SearchTitle
-          isVerified={isVerified}
-          onChangeIsVerified={setIsVerified}
-        />
-        <Foods data={filteredFoods} onAddFood={handleAddSelectedFood} />
-        <Ads />
-      </View>
-    </SafeAreaView>
+    <View style={styles.container}>
+      <Header
+        variant="search"
+        data={whenToEatData}
+        value={value}
+        onChange={setValue}
+      />
+      <SearchBar
+        searchValue={food}
+        onChangeSearchValue={setFood}
+        onSearch={handleSearchValue}
+      />
+      <NavigationBar data={types} type={type} onChangeType={setType} />
+      <SearchTitle isVerified={isVerified} onChangeIsVerified={setIsVerified} />
+      <Foods
+        data={filteredFoods}
+        onAddFood={handleAddSelectedFood}
+        loading={loading}
+      />
+      <Ads />
+    </View>
   );
 }

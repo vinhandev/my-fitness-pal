@@ -5,6 +5,7 @@ import {
   ApolloProvider,
   gql,
 } from '@apollo/client';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const client = new ApolloClient({
   uri: 'https://liuhe.stepzen.net/api/getting-started/__graphql',
@@ -17,7 +18,9 @@ const client = new ApolloClient({
 export default function RootLayout() {
   return (
     <ApolloProvider client={client}>
-      <Slot />
+      <SafeAreaView style={{ flex: 1 }}>
+        <Stack screenOptions={{ headerShown: false }} />
+      </SafeAreaView>
     </ApolloProvider>
   );
 }
