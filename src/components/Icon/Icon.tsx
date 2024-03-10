@@ -3,9 +3,10 @@ import React from 'react';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 type Props = {
-  variant: 'back' | 'search' | 'plus' | 'verified' | 'down' | 'close';
+  variant: 'back' | 'search' | 'plus' | 'verified' | 'down' | 'close' | 'scanner';
   size: number;
   color: string;
 };
@@ -13,7 +14,8 @@ export default function Icon({ color, size, variant }: Props) {
   switch (variant) {
     case 'back':
       return <Ionicons name="arrow-back" size={size} color={color} />;
-
+    case 'scanner':
+      return <MaterialCommunityIcons name="barcode-scan" size={24} color="black" />
     case 'search':
       return <Ionicons name="search" size={size} color={color} />;
     case 'verified':

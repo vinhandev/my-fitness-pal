@@ -3,7 +3,6 @@ import { Colors, FontSizes, FontWeights, Sizes } from '../../../assets';
 
 export const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: Sizes.paddingHorizontal,
     paddingVertical: Sizes.paddingVertical,
   },
   containerSearch: {

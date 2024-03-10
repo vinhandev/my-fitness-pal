@@ -21,8 +21,6 @@ export default function Dashboard() {
     router.push('/search');
   };
 
-  //   console.log('data', data);
-
   return (
     <View style={styles.container}>
       <Header variant="text" text="Dashboard" />

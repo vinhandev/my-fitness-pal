@@ -1,9 +1,16 @@
-import { ActivityIndicator, FlatList, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 import {
   Ads,
   Foods,
   Header,
+  Icon,
   NavigationBar,
   SearchBar,
   SearchTitle,
@@ -11,11 +18,13 @@ import {
 
 import { styles } from './Search.styles';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FoodData, SelectorData } from '../../types';
 import { useAddFoodApi, useSearchApi } from '../../hooks';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
+import { Colors, Sizes } from '../../assets';
+import { Camera, CameraType } from 'expo-camera';
 
 export default function Search() {
   const whenToEatData: SelectorData[] = [
@@ -51,13 +60,13 @@ export default function Search() {
   const [type, setType] = useState('All');
   const [isVerified, setIsVerified] = useState(false);
   const [selectedFoods, setSelectedFoods] = useState<FoodData[]>([]);
+  const [scannerEnabled, setScannerEnabled] = useState(false);
+  const [permission, requestPermission] = Camera.useCameraPermissions();
 
   const { data, loading, error, search } = useSearchApi();
   const [addFood] = useAddFoodApi();
 
   const handleAddSelectedFood = async (food: FoodData) => {
-    console.log('food', food);
-    
     await addFood({
       variables: {
         user_id: 'vinhan',
@@ -77,6 +86,10 @@ export default function Search() {
     });
   };
 
+  const handleScanBarcode = () => {
+    setScannerEnabled(!scannerEnabled);
+  };
+
   const filteredFoods = useMemo(() => {
     return data?.filter((food) => {
       if (isVerified) {
@@ -94,6 +107,38 @@ export default function Search() {
     );
   }
 
+  useEffect(() => {
+    requestPermission();
+  }, []);
+
+  if (scannerEnabled) {
+    return (
+      <View style={styles.containerCamera}>
+        <TouchableOpacity
+          onPress={handleScanBarcode}
+          style={{
+            position: 'absolute',
+            right: Sizes.paddingHorizontal,
+            top: 10,
+            bottom: 0,
+            zIndex: 1,
+          }}
+        >
+          <Icon variant="close" size={Sizes.bigIcon} color={Colors.white} />
+        </TouchableOpacity>
+        <Camera
+          style={{
+            flex: 1,
+          }}
+          // type={CameraType.front}
+          onBarCodeScanned={({ data }) => {
+            console.log('barcode', data);
+          }}
+        />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <Header
@@ -102,11 +147,18 @@ export default function Search() {
         value={value}
         onChange={setValue}
       />
-      <SearchBar
-        searchValue={food}
-        onChangeSearchValue={setFood}
-        onSearch={handleSearchValue}
-      />
+      <View style={styles.containerSearch}>
+        <View style={{ flexGrow: 1 }}>
+          <SearchBar
+            searchValue={food}
+            onChangeSearchValue={setFood}
+            onSearch={handleSearchValue}
+          />
+        </View>
+        <TouchableOpacity onPress={handleScanBarcode}>
+          <Icon variant="scanner" size={Sizes.bigIcon} color={Colors.black} />
+        </TouchableOpacity>
+      </View>
       <NavigationBar data={types} type={type} onChangeType={setType} />
       <SearchTitle isVerified={isVerified} onChangeIsVerified={setIsVerified} />
       <Foods

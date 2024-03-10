@@ -15,16 +15,12 @@ const query = gql`
   }
 `;
 export const useGetFoodByDateApi = (date: Date, user_id: string) => {
-  console.log(dayjs(date).format('YYYY-MM-DD'));
-
   const { data, loading, error } = useQuery(query, {
     variables: {
       date: dayjs(date).subtract(1, 'day').format('YYYY-MM-DD'),
       user_id,
     },
   });
-
-  console.log(data);
 
   const result: MealData[] = useMemo(() => {
     const tmpResult: MealData[] = [
