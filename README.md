@@ -1,6 +1,7 @@
 # Count clatories in everyday meals with Stepzen
 
-This is a React Native Fitness Pal , using API edamam and Stepzen for backend graphql and database
+This is a React Native Fitness Pal , using API edamam and Stepzen for backend graphql and database.
+
 Additional features:
 
 - [Expo Router](https://docs.expo.dev/routing/introduction/) file-based navigation and API Routes
