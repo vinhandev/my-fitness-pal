@@ -24,6 +24,7 @@ type FormData = {
   numberOfMealInDay: number;
   deadlineTime: number;
   goalWeight: number;
+  gender: number;
 };
 export default function RegisterScreen() {
   const dispatch = useDispatch();
@@ -36,10 +37,13 @@ export default function RegisterScreen() {
     goalWeight: 0,
     deadlineTime: 0,
     numberOfMealInDay: 0,
+    gender: 0,
   });
 
   const handleInitInformation = () => {
     const param: State = {
+      gender: data.gender,
+      activitiesLevel: 1,
       name: data.name,
       deadlineTime: data.deadlineTime,
       height: data.height,
@@ -94,6 +98,17 @@ export default function RegisterScreen() {
               onValidate: (item) => item.length > 20,
             },
           ],
+        },
+        {
+          value: data.gender,
+          name: 'Gender',
+          type: 'gender',
+          onChangeItem: (item) => {
+            setData({
+              ...data,
+              gender: item,
+            });
+          },
         },
         {
           value: data.yearOfBirth,

@@ -21,6 +21,7 @@ export type State = {
   createWeight: number;
   total: number;
   limit: number;
+  gender: number;
   current: number;
   createAt: number;
   activitiesLevel: number;
@@ -39,13 +40,14 @@ const initialState: State = {
   name: '',
   weight: 0,
   height: 0,
+  gender: 0,
   yearOfBirth: 0,
   deadlineTime: 0,
   mealsList: [],
   numberOfMeals: 0,
   goalWeight: 0,
   createWeight: 0,
-  activitiesLevel: 0,
+  activitiesLevel: 1,
   total: 0,
   limit: 0,
   current: 0,
@@ -70,7 +72,7 @@ const userSlice = createSlice({
       state.deadlineTime = action.payload.deadlineTime;
       state.numberOfMeals = action.payload.numberOfMeals;
       state.mealsList = action.payload.mealsList;
-      state.createAt = action.payload.createAt;
+      state.createAt = new Date().getTime();
       state.createWeight = action.payload.createWeight;
     },
     updateMeals(state, action: { payload: MealList[] }) {
@@ -109,6 +111,13 @@ const userSlice = createSlice({
       action: { payload: { calories: number; date: number } }
     ) {
       state.caloriesList.push(action.payload);
+
+      state.mealsList = state.mealsList.map((meal) => {
+        return {
+          meals: [],
+          mealName: meal.mealName,
+        };
+      });
     },
   },
 });
@@ -120,6 +129,6 @@ export const {
   updateCalories,
   addCaloriesList,
   addWeightList,
-  updateActivitiesLevel
+  updateActivitiesLevel,
 } = userSlice.actions;
 export const user = userSlice.reducer;

@@ -22,6 +22,7 @@ import {
 import { getValueByConditionList, handleStepButtonState } from '../../utils';
 import { Colors, Sizes } from '../../assets';
 import DateInput from '../Inputs/DateInput/DateInput';
+import GenderInput from '../Inputs/GenderInput/GenderInput';
 
 export type ErrorInputItem<T> = {
   message: string;
@@ -29,7 +30,7 @@ export type ErrorInputItem<T> = {
 };
 export type InputItem = {
   name: string;
-  type: 'number' | 'string' | 'date';
+  type: 'number' | 'string' | 'date' | 'gender';
 } & (
   | {
       type: 'string';
@@ -38,7 +39,7 @@ export type InputItem = {
       errors?: ErrorInputItem<string>[];
     }
   | {
-      type: 'number' | 'date';
+      type: 'number' | 'date' | 'gender';
       value: number;
       onChangeItem: (item: number) => void;
       errors?: ErrorInputItem<number>[];
@@ -92,7 +93,8 @@ const StepInputItem = forwardRef(
     console.log(errorMessage, isError);
 
     useEffect(() => {
-      onError(isError);
+      console.log(item.type, !!errors ? isError : false);
+      onError(!!errors ? isError : false);
     }, [isError]);
 
     switch (type) {
@@ -116,6 +118,18 @@ const StepInputItem = forwardRef(
             placeholder={name}
             dateTime={value}
             onChangeDate={(item) => onChangeItem(item as typeof value)}
+            isError={!hideError && isError}
+            errorMessage={errorMessage}
+          />
+        );
+      case 'gender':
+        return (
+          <GenderInput
+            ref={isFirstInput ? ref : undefined}
+            style={styles.textInput}
+            placeholder={name}
+            gender={value}
+            onChangeGender={(item) => onChangeItem(item)}
             isError={!hideError && isError}
             errorMessage={errorMessage}
           />
@@ -188,7 +202,9 @@ export default function StepInputLayout({
     if (firstInputRef.current) {
       firstInputRef.current.focus();
     }
-    setErrorCountBooleanList([])
+    setErrorCountBooleanList(
+      Array.from({ length: inputList.data.length }, () => false)
+    );
     setIsFirstTimeClickButton(true);
   }, [currentStepIndex]);
 
@@ -221,37 +237,47 @@ export default function StepInputLayout({
         </Text>
       </View>
 
-      <FlatList
-        contentContainerStyle={{ gap: 10, paddingVertical: 10 }}
-        data={inputList.data}
-        renderItem={({ item, index }) => (
-          <StepInputItem
-            ref={index === 0 ? firstInputRef : undefined}
-            item={item}
-            index={index}
-            hideError={isFirstTimeClickButton}
-            onError={(param) => {
-              console.log('ok ??');
+      {errorCountBooleanList.length > 0 && (
+        <FlatList
+          contentContainerStyle={{ gap: 10, paddingVertical: 10 }}
+          data={inputList.data}
+          renderItem={({ item, index }) => (
+            <StepInputItem
+              ref={index === 0 ? firstInputRef : undefined}
+              item={item}
+              index={index}
+              hideError={isFirstTimeClickButton}
+              onError={(param) => {
+                console.log('ok ??');
 
-              let tempBooleanList =
-                errorCountBooleanList.length === 0
-                  ? Array.from({ length: inputList.data.length }, () => true)
-                  : errorCountBooleanList;
-
-              tempBooleanList = tempBooleanList.map(
-                (booleanErrorItem, booleanErrorIndex) => {
-                  if (index === booleanErrorIndex) {
-                    return param;
+                const tempBooleanList = errorCountBooleanList.map(
+                  (booleanErrorItem, booleanErrorIndex) => {
+                    console.log(
+                      booleanErrorIndex,
+                      index,
+                      item,
+                      tempBooleanList,
+                      param
+                    );
+                    if (index === booleanErrorIndex) {
+                      return param;
+                    }
+                    return booleanErrorItem;
                   }
-                  return booleanErrorItem;
-                }
-              );
-              console.log('tempData', tempBooleanList, tempBooleanList.length);
-              setErrorCountBooleanList(tempBooleanList);
-            }}
-          />
-        )}
-      />
+                );
+                console.log(
+                  'tempData',
+                  tempBooleanList,
+                  tempBooleanList.length,
+                  index,
+                  errorCountBooleanList.length
+                );
+                setErrorCountBooleanList(() => tempBooleanList);
+              }}
+            />
+          )}
+        />
+      )}
 
       <View style={{ gap: 10, paddingVertical: 10 }}>
         {isCanBack ? (

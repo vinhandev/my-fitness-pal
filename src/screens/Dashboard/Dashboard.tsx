@@ -1,13 +1,11 @@
-import { Dimensions, Image, SafeAreaView, Text, View } from 'react-native';
+import { Image, SafeAreaView, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { State, updateCalories } from '../../store/slices';
-import { useEffect, useState } from 'react';
-import { Button } from '../../components';
+import { useEffect } from 'react';
 import { router } from 'expo-router';
 import TextButton from '../../components/Buttons/TextButton/TextButton';
 import ProgressBar from '../../components/ProgressBar/ProgressBar';
-import { BarChart, LineChart } from 'react-native-gifted-charts';
-import { FontWeights } from '../../assets';
+import { LineChart } from 'react-native-gifted-charts';
 
 export default function DashboardScreen() {
   const weight = useSelector((state: { user: State }) => state.user.weight);
@@ -16,6 +14,9 @@ export default function DashboardScreen() {
   );
   const mealsList = useSelector(
     (state: { user: State }) => state.user.mealsList
+  );
+  const caloriesList = useSelector(
+    (state: { user: State }) => state.user.caloriesList
   );
   const goalWeight = useSelector(
     (state: { user: State }) => state.user.goalWeight
@@ -28,6 +29,7 @@ export default function DashboardScreen() {
     (state: { user: State }) => state.user.deadlineTime
   );
   const createAt = useSelector((state: { user: State }) => state.user.createAt);
+  const gender = useSelector((state: { user: State }) => state.user.gender);
   const total = useSelector((state: { user: State }) => state.user.total);
   const current = useSelector((state: { user: State }) => state.user.current);
   const limit = useSelector((state: { user: State }) => state.user.limit);
@@ -64,8 +66,11 @@ export default function DashboardScreen() {
 
   const getBMR = () => {
     const BMR =
-      (88.362 + 13.397 * weight + 4.799 * height - 5.677 * age) *
-      activitiesLevel;
+      gender === 0
+        ? (88.362 + 13.397 * weight + 4.799 * height - 5.677 * age) *
+          activitiesLevel
+        : (447.593 + 9.247 * weight + 3.098 * height - 4.33 * age) *
+          activitiesLevel;
     const total = BMR;
     const limit = BMR - ((weight - goalWeight) * 7700) / dayCount;
     console.log('BMR', BMR, height, age);
@@ -84,6 +89,14 @@ export default function DashboardScreen() {
   useEffect(() => {
     getBMR();
   }, [mealsList, activitiesLevel]);
+
+  function isSameDay(date1: Date, date2: Date) {
+    return (
+      date1.getFullYear() === date2.getFullYear() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getDate() === date2.getDate()
+    );
+  }
 
   console.log(current, limit, total, weight, goalWeight);
 
@@ -222,7 +235,9 @@ export default function DashboardScreen() {
             height={280}
             data={weightList.map((item) => ({
               value: item.value,
-              dataPointText: item.dataPointText,
+              dataPointText: `${item.dataPointText} - ${new Date(
+                item.date
+              ).getDate()} / ${new Date(item.date).getMonth() + 1}`,
             }))}
           />
         </View>
