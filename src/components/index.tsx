@@ -1,5 +1,6 @@
 export { default as Header } from './Header/Header';
 export { default as Icon } from './Icon/Icon';
+export { default as Button } from './Buttons/Button/Button';
 
 // inputs
 export { default as Selector } from './Inputs/Selector/Selector';
@@ -18,3 +19,6 @@ export { default as Foods } from './Search/Foods/Foods';
 export { default as Calories } from './Dashboard/Calories/Calories';
 export { default as DashboardAds } from './Dashboard/DashboardAds/DashboardAds';
 export { default as FoodLogger } from './Dashboard/FoodLogger/FoodLogger';
+
+// onboarding
+export { default as Background } from './Background/Background';

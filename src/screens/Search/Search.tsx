@@ -25,18 +25,20 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Colors, Sizes } from '../../assets';
 import { Camera, CameraType } from 'expo-camera';
+import { useDispatch, useSelector } from 'react-redux';
+import { MealList, State, updateMeals } from '../../store/slices';
 
 export default function Search() {
-  const whenToEatData: SelectorData[] = [
-    {
-      label: 'Breakfast',
-      value: 'Breakfast',
-    },
-    {
-      label: 'Lunch',
-      value: 'Lunch',
-    },
-  ];
+  const numberOfMeals = useSelector(
+    (state: { user: State }) => state.user.numberOfMeals
+  );
+  const whenToEatData: SelectorData[] = Array.from(
+    { length: numberOfMeals },
+    (_, i) => ({
+      label: `Meal ${i + 1}`,
+      value: `${i}`,
+    })
+  );
   const types: SelectorData[] = [
     {
       label: 'All',
@@ -62,19 +64,32 @@ export default function Search() {
   const [selectedFoods, setSelectedFoods] = useState<FoodData[]>([]);
   const [scannerEnabled, setScannerEnabled] = useState(false);
   const [permission, requestPermission] = Camera.useCameraPermissions();
+  const meals = useSelector((state: { user: State }) => state.user.mealsList);
+
+  const dispatch = useDispatch();
 
   const { data, loading, error, search } = useSearchApi();
-  const [addFood] = useAddFoodApi();
 
   const handleAddSelectedFood = async (food: FoodData) => {
-    await addFood({
-      variables: {
-        user_id: 'vinhan',
-        food_id: food.id,
-        kcal: food.kcal,
-        label: food.name,
-      },
-    });
+    const param: MealList[] =
+      meals?.map((item) => {
+        if (item.mealName === whenToEatData[value].label) {
+          return {
+            ...item,
+            meals: [
+              ...item.meals,
+              {
+                name: food.name,
+                calories: food.kcal,
+                image: '',
+              },
+            ],
+          };
+        }
+        return item;
+      }) ?? [];
+    dispatch(updateMeals(param));
+
     router.back();
   };
 
@@ -113,7 +128,7 @@ export default function Search() {
 
   if (scannerEnabled) {
     return (
-      <View style={styles.containerCamera}>
+      <SafeAreaView style={styles.containerCamera}>
         <TouchableOpacity
           onPress={handleScanBarcode}
           style={{
@@ -135,12 +150,12 @@ export default function Search() {
             console.log('barcode', data);
           }}
         />
-      </View>
+      </SafeAreaView>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Header
         variant="search"
         data={whenToEatData}
@@ -155,9 +170,6 @@ export default function Search() {
             onSearch={handleSearchValue}
           />
         </View>
-        <TouchableOpacity onPress={handleScanBarcode}>
-          <Icon variant="scanner" size={Sizes.bigIcon} color={Colors.black} />
-        </TouchableOpacity>
       </View>
       <NavigationBar data={types} type={type} onChangeType={setType} />
       <SearchTitle isVerified={isVerified} onChangeIsVerified={setIsVerified} />
@@ -166,7 +178,7 @@ export default function Search() {
         onAddFood={handleAddSelectedFood}
         loading={loading}
       />
-      <Ads />
-    </View>
+      {/* <Ads /> */}
+    </SafeAreaView>
   );
 }

@@ -25,7 +25,8 @@ export default function Food(props: Props) {
     case 'add': {
       const { onAddFood } = props;
       const description = useMemo(() => {
-        return `${food.kcal} cal, ${food.quantity} ${food.unitType}, ${food.from}`;
+        return `${food.kcal} cal`;
+        // return `${food.kcal} cal, ${food.quantity} ${food.unitType}, ${food.from}`;
       }, [food]);
 
       const isVerified = food.isVerified;

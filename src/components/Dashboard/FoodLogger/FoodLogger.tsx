@@ -5,6 +5,11 @@ import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { styles } from './FoodLogger.styles';
 import { MealData } from '../../../types';
 import Food from '../../Search/Food/Food';
+import Icon from '../../Icon/Icon';
+import { Colors, Sizes } from '../../../assets';
+import ProgressBar from '../../ProgressBar/ProgressBar';
+import { useSelector } from 'react-redux';
+import { State } from '../../../store/slices';
 
 type Props = {
   meals: MealData[];
@@ -12,21 +17,42 @@ type Props = {
 };
 
 const Meal = ({ meal, onAdd }: { meal: MealData; onAdd: () => void }) => {
-  const { foods, kcal, name } = meal;
+ const { foods, kcal, name } = meal;
   return (
     <View style={styles.item}>
-      <View style={styles.btnTitle}>
-        <Text style={styles.text1}>{name}</Text>
+      <View
+        style={{
+          padding: Sizes.paddingHorizontal,
+          borderBottomWidth: 1,
+          borderColor: Colors.neutral,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        <View style={styles.btnTitle}>
+          <Text style={styles.text1}>{name}</Text>
+          <TouchableOpacity style={styles.btnAddFood} onPress={onAdd}>
+            <Icon variant="plus" size={15} color="#fff" />
+          </TouchableOpacity>
+        </View>
+        <View>
+          <Text
+            style={{
+              fontSize: 14,
+              fontWeight: '500',
+              color: '#aaa',
+            }}
+          >
+            {kcal} kcal
+          </Text>
+        </View>
       </View>
       <FlatList
         data={foods}
         renderItem={({ item }) => <Food food={item} variant="log" />}
       />
-      <View>
-        <TouchableOpacity style={styles.btnAddFood} onPress={onAdd}>
-          <Text style={styles.text2}>Add Food</Text>
-        </TouchableOpacity>
-      </View>
+     
     </View>
   );
 };

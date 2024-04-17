@@ -5,7 +5,10 @@ import {
   ApolloProvider,
   gql,
 } from '@apollo/client';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Provider } from 'react-redux';
+import { persistor, store } from '../store';
+import { PersistGate } from 'redux-persist/integration/react';
+import { Text } from 'react-native';
 
 const client = new ApolloClient({
   uri: 'https://liuhe.stepzen.net/api/getting-started/__graphql',
@@ -17,10 +20,12 @@ const client = new ApolloClient({
 });
 export default function RootLayout() {
   return (
-    <ApolloProvider client={client}>
-      <SafeAreaView style={{ flex: 1 }}>
-        <Stack screenOptions={{ headerShown: false }} />
-      </SafeAreaView>
-    </ApolloProvider>
+    <Provider store={store}>
+      <PersistGate loading={<Text>Loading...</Text>} persistor={persistor}>
+        <ApolloProvider client={client}>
+          <Stack screenOptions={{ headerShown: false }} />
+        </ApolloProvider>
+      </PersistGate>
+    </Provider>
   );
 }
