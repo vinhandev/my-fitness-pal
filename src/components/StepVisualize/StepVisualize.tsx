@@ -3,10 +3,10 @@ import { Colors } from '../../constants';
 
 type Props = {
   currentStepIndex: number;
-  maxStep: number;
+  numberOfSteps: number;
 };
 
-export default function StepVisualize({ currentStepIndex, maxStep }: Props) {
+export default function StepVisualize({ currentStepIndex, numberOfSteps }: Props) {
   return (
     <View
       style={{
@@ -14,7 +14,7 @@ export default function StepVisualize({ currentStepIndex, maxStep }: Props) {
         gap: 5,
       }}
     >
-      {Array.from({ length: maxStep }).map((item, index) => (
+      {Array.from({ length: numberOfSteps }).map((item, index) => (
         <View
           key={index}
           style={{

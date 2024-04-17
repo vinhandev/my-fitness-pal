@@ -1,37 +1,68 @@
-import { FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TextInput as RNTextInput,
+  View,
+} from 'react-native';
 import NumberInput from '../Inputs/NumberInput/NumberInput';
 import StepVisualize from '../StepVisualize/StepVisualize';
+import TextButton from '../Buttons/TextButton/TextButton';
+import TextInput from '../Inputs/TextInput/TextInput';
+import { useEffect, useRef } from 'react';
+import { handleStepButtonState } from '../../utils';
 
 export type InputItem<T> = {
   name: string;
   item: T;
-  onChangeItem: (item: T) => void;
   errors?: {
     message: string;
     condition: (item: T) => boolean;
   }[];
+  onChangeItem: (item: T) => void;
 };
 type Props = {
   inputList: {
     label: string;
     data: InputItem<string | number>[];
   };
-  maxStep: number;
+  numberOfSteps: number;
   currentStepIndex: number;
+  onSubmit: () => void;
+  onBack: () => void;
+  onNext: () => void;
 };
 export default function StepInputLayout({
   inputList,
-  maxStep,
+  numberOfSteps,
   currentStepIndex,
+  onBack,
+  onNext,
+  onSubmit,
 }: Props) {
+  const firstInputRef = useRef<any>();
+  const { isCanBack, isCanSubmit } = handleStepButtonState(
+    currentStepIndex,
+    numberOfSteps
+  );
+
+  useEffect(() => {
+    if (firstInputRef.current) {
+      firstInputRef.current.focus();
+    }
+  }, [currentStepIndex]);
+
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <View
         style={{
           paddingVertical: 10,
         }}
       >
-        <StepVisualize maxStep={maxStep} currentStepIndex={currentStepIndex} />
+        <StepVisualize
+          numberOfSteps={numberOfSteps}
+          currentStepIndex={currentStepIndex}
+        />
       </View>
 
       <View
@@ -53,11 +84,16 @@ export default function StepInputLayout({
       <FlatList
         contentContainerStyle={{ gap: 10, paddingVertical: 10 }}
         data={inputList.data}
-        renderItem={({ item }) => {
+        renderItem={({ item, index }) => {
+          const isFirstInput = index === 0;
+
+          console.log('step', isFirstInput, item);
+
           switch (typeof item.item) {
             case 'number':
               return (
                 <NumberInput
+                  ref={isFirstInput ? firstInputRef : undefined}
                   style={styles.textInput}
                   placeholder={item.name}
                   numberValue={item.item}
@@ -67,6 +103,7 @@ export default function StepInputLayout({
             case 'string':
               return (
                 <TextInput
+                  ref={isFirstInput ? firstInputRef : undefined}
                   style={styles.textInput}
                   placeholder={item.name}
                   value={item.item}
@@ -78,6 +115,19 @@ export default function StepInputLayout({
           }
         }}
       />
+
+      <View style={{ gap: 10, paddingVertical: 10 }}>
+        {isCanBack ? (
+          <TextButton variant="secondary" onPress={onBack}>
+            Back
+          </TextButton>
+        ) : null}
+        {isCanSubmit ? (
+          <TextButton onPress={onSubmit}>Submit</TextButton>
+        ) : (
+          <TextButton onPress={onNext}>Next</TextButton>
+        )}
+      </View>
     </View>
   );
 }

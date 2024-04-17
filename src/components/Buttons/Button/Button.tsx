@@ -25,6 +25,7 @@ export default function Button({ children, onPress, variant }: Props) {
 
   return (
     <TouchableOpacity
+      activeOpacity={0.9}
       style={{
         backgroundColor,
 

@@ -15,7 +15,6 @@ import StepInputLayout, {
 import TextButton from '../../components/Buttons/TextButton/TextButton';
 import { router } from 'expo-router';
 
-const maxStep = 3;
 
 type FormData = {
   name: string;
@@ -27,6 +26,7 @@ type FormData = {
   goalWeight: number;
 };
 export default function RegisterScreen() {
+  const dispatch = useDispatch();
   const [stepIndex, setStepIndex] = useState<number>(0);
   const [data, setData] = useState<FormData>({
     name: '',
@@ -37,25 +37,6 @@ export default function RegisterScreen() {
     deadlineTime: new Date('2024-06-01').getTime(),
     numberOfMealInDay: 0,
   });
-  const dispatch = useDispatch();
-
-  let isShowSubmitButton;
-  let isShowBackButton;
-  switch (stepIndex) {
-    case 0:
-      isShowBackButton = false;
-      isShowSubmitButton = false;
-      break;
-    case maxStep - 1:
-      isShowBackButton = true;
-      isShowSubmitButton = true;
-
-      break;
-    default:
-      isShowBackButton = true;
-      isShowSubmitButton = false;
-      break;
-  }
 
   const handleInitInformation = () => {
     const param: State = {
@@ -81,14 +62,6 @@ export default function RegisterScreen() {
     };
     dispatch(registerInformation(param));
     router.push('/dashboard');
-  };
-
-  const handleNextIndex = () => {
-    setStepIndex(stepIndex + 1 > maxStep ? 0 : stepIndex + 1);
-  };
-
-  const handleBack = () => {
-    setStepIndex(stepIndex === 0 ? 0 : stepIndex - 1);
   };
 
   const textInputStepList: {
@@ -188,6 +161,17 @@ export default function RegisterScreen() {
     },
   ];
 
+const numberOfSteps = textInputStepList.length;
+
+
+  const handleNextIndex = () => {
+    setStepIndex(stepIndex + 1 > numberOfSteps ? 0 : stepIndex + 1);
+  };
+
+  const handleBack = () => {
+    setStepIndex(stepIndex === 0 ? 0 : stepIndex - 1);
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <KeyboardAvoidingView
@@ -200,21 +184,12 @@ export default function RegisterScreen() {
       >
         <StepInputLayout
           inputList={textInputStepList[stepIndex]}
-          maxStep={maxStep}
+          numberOfSteps={numberOfSteps}
           currentStepIndex={stepIndex}
+          onSubmit={handleInitInformation}
+          onBack={handleBack}
+          onNext={handleNextIndex}
         />
-        <View style={{ gap: 10, paddingVertical: 10 }}>
-          {isShowBackButton ? (
-            <TextButton variant="secondary" onPress={handleBack}>
-              Back
-            </TextButton>
-          ) : null}
-          {isShowSubmitButton ? (
-            <TextButton onPress={handleInitInformation}>Submit</TextButton>
-          ) : (
-            <TextButton onPress={handleNextIndex}>Next</TextButton>
-          )}
-        </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
