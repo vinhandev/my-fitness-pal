@@ -11,10 +11,10 @@ import { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import StepInputLayout, {
   InputItem,
+  InputListProps,
 } from '../../components/StepInputLayout/StepInputLayout';
 import TextButton from '../../components/Buttons/TextButton/TextButton';
 import { router } from 'expo-router';
-
 
 type FormData = {
   name: string;
@@ -34,7 +34,7 @@ export default function RegisterScreen() {
     height: 0,
     weight: 0,
     goalWeight: 0,
-    deadlineTime: new Date('2024-06-01').getTime(),
+    deadlineTime: 0,
     numberOfMealInDay: 0,
   });
 
@@ -64,38 +64,62 @@ export default function RegisterScreen() {
     router.push('/dashboard');
   };
 
-  const textInputStepList: {
-    label: string;
-    data: (InputItem<string> | InputItem<number>)[];
-  }[] = [
+  const textInputStepList: InputListProps[] = [
     {
       label: 'Your Information',
       data: [
         {
-          item: data.name,
+          value: data.name,
           name: 'Name',
+          type: 'string',
           onChangeItem: (item) => {
-            setData({
-              ...data,
-              name: item,
-            });
+            if (typeof item === 'string') {
+              setData({
+                ...data,
+                name: item,
+              });
+            }
           },
           errors: [
             {
               message: 'Name is required',
-              condition: (item) => item === '',
+              onValidate: (item) => item === '',
+            },
+            {
+              message: 'Name must contain at least 2 characters',
+              onValidate: (item) => item.length < 2,
+            },
+            {
+              message: 'Name must contain at most 20 characters',
+              onValidate: (item) => item.length > 20,
             },
           ],
         },
         {
-          item: data.yearOfBirth,
+          value: data.yearOfBirth,
           name: 'Year of Birth',
+          type: 'date',
           onChangeItem: (item) => {
-            setData({
-              ...data,
-              yearOfBirth: item,
-            });
+            typeof item === 'number' &&
+              setData({
+                ...data,
+                yearOfBirth: item,
+              });
           },
+          errors: [
+            {
+              message: 'Year of Birth is required',
+              onValidate: (item) => item === 0,
+            },
+            {
+              message: 'Year of Birth must be greater than 1900',
+              onValidate: (item) => new Date(item).getFullYear() < 1900,
+            },
+            {
+              message: 'Year of Birth must be less than 2024',
+              onValidate: (item) => new Date(item).getFullYear() > 2024,
+            },
+          ],
         },
       ],
     },
@@ -103,24 +127,57 @@ export default function RegisterScreen() {
       label: 'Your Sizes',
       data: [
         {
-          item: data.weight,
+          value: data.weight,
           name: 'Weight (kg)',
+          type: 'number',
+
           onChangeItem: (item) => {
-            setData({
-              ...data,
-              weight: item,
-            });
+            typeof item === 'number' &&
+              setData({
+                ...data,
+                weight: item,
+              });
           },
+          errors: [
+            {
+              message: 'Weight is required',
+              onValidate: (item) => item === 0,
+            },
+            {
+              message: 'Weight must be greater than 10',
+              onValidate: (item) => item < 10,
+            },
+            {
+              message: 'Year of Birth must be less than 500',
+              onValidate: (item) => item > 500,
+            },
+          ],
         },
         {
-          item: data.height,
+          value: data.height,
           name: 'Height (cm)',
+          type: 'number',
           onChangeItem: (item) => {
-            setData({
-              ...data,
-              height: item,
-            });
+            typeof item === 'number' &&
+              setData({
+                ...data,
+                height: item,
+              });
           },
+          errors: [
+            {
+              message: 'Height is required',
+              onValidate: (item) => item === 0,
+            },
+            {
+              message: 'Height must be greater than 80',
+              onValidate: (item) => item < 80,
+            },
+            {
+              message: 'Height must be less than 250',
+              onValidate: (item) => item > 250,
+            },
+          ],
         },
       ],
     },
@@ -128,41 +185,84 @@ export default function RegisterScreen() {
       label: 'Your Goal',
       data: [
         {
-          item: data.goalWeight,
+          value: data.goalWeight,
           name: 'Goal Weight (cm)',
+          type: 'number',
           onChangeItem: (item) => {
-            setData({
-              ...data,
-              goalWeight: item,
-            });
+            typeof item === 'number' &&
+              setData({
+                ...data,
+                goalWeight: item,
+              });
           },
+          errors: [
+            {
+              message: 'Goal Weight is required',
+              onValidate: (item) => item === 0,
+            },
+            {
+              message: 'Goal Weight must be smaller than curent weight',
+              onValidate: (item) => item > data.weight,
+            },
+            {
+              message: 'Goal Weight must be greater than 20',
+              onValidate: (item) => item < 20,
+            },
+          ],
         },
         {
-          item: data.deadlineTime,
+          value: data.deadlineTime,
           name: 'Deadline',
+          type: 'date',
           onChangeItem: (item) => {
-            setData({
-              ...data,
-              deadlineTime: item,
-            });
+            typeof item === 'number' &&
+              setData({
+                ...data,
+                deadlineTime: item,
+              });
           },
+          errors: [
+            {
+              message: 'Deadline is required',
+              onValidate: (item) => item === 0,
+            },
+            {
+              message: 'Deadline must be greater than current time',
+              onValidate: (item) => item < new Date().getTime(),
+            },
+          ],
         },
         {
-          item: data.numberOfMealInDay,
+          value: data.numberOfMealInDay,
+          type: 'number',
           name: 'Number of meal in a day',
           onChangeItem: (item) => {
-            setData({
-              ...data,
-              numberOfMealInDay: item,
-            });
+            typeof item === 'number' &&
+              setData({
+                ...data,
+                numberOfMealInDay: item,
+              });
           },
+          errors: [
+            {
+              message: 'Number of meals is required',
+              onValidate: (item) => item === 0,
+            },
+            {
+              message: 'Number of meals must be greater than 0',
+              onValidate: (item) => item < 0,
+            },
+            {
+              message: 'Number of meals must be less than 10',
+              onValidate: (item) => item > 10,
+            },
+          ],
         },
       ],
     },
   ];
 
-const numberOfSteps = textInputStepList.length;
-
+  const numberOfSteps = textInputStepList.length;
 
   const handleNextIndex = () => {
     setStepIndex(stepIndex + 1 > numberOfSteps ? 0 : stepIndex + 1);

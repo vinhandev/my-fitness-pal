@@ -8,30 +8,136 @@ import {
 import NumberInput from '../Inputs/NumberInput/NumberInput';
 import StepVisualize from '../StepVisualize/StepVisualize';
 import TextButton from '../Buttons/TextButton/TextButton';
-import TextInput from '../Inputs/TextInput/TextInput';
-import { useEffect, useRef } from 'react';
-import { handleStepButtonState } from '../../utils';
+import TextInput, { TextInputProps } from '../Inputs/TextInput/TextInput';
+import {
+  ForwardedRef,
+  LegacyRef,
+  MutableRefObject,
+  ReactNode,
+  forwardRef,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import { getValueByConditionList, handleStepButtonState } from '../../utils';
+import { Colors, Sizes } from '../../assets';
+import DateInput from '../Inputs/DateInput/DateInput';
 
-export type InputItem<T> = {
+export type ErrorInputItem<T> = {
+  message: string;
+  onValidate: (item: T) => boolean;
+};
+export type InputItem = {
   name: string;
-  item: T;
-  errors?: {
-    message: string;
-    condition: (item: T) => boolean;
-  }[];
-  onChangeItem: (item: T) => void;
+  type: 'number' | 'string' | 'date';
+} & (
+  | {
+      type: 'string';
+      value: string;
+      onChangeItem: (item: string) => void;
+      errors?: ErrorInputItem<string>[];
+    }
+  | {
+      type: 'number' | 'date';
+      value: number;
+      onChangeItem: (item: number) => void;
+      errors?: ErrorInputItem<number>[];
+    }
+);
+
+export type InputListProps = {
+  label: string;
+  data: InputItem[];
 };
 type Props = {
-  inputList: {
-    label: string;
-    data: InputItem<string | number>[];
-  };
+  inputList: InputListProps;
   numberOfSteps: number;
   currentStepIndex: number;
   onSubmit: () => void;
   onBack: () => void;
   onNext: () => void;
 };
+
+function handleValidate<T>(
+  value: T,
+  errors: ErrorInputItem<T>[]
+): string | null {
+  if (errors?.length === 0) return null;
+  const validatedErrorList = errors?.filter((item) => item.onValidate(value));
+  return !!validatedErrorList && validatedErrorList?.length > 0
+    ? validatedErrorList[0].message
+    : null;
+}
+
+type StepInputItemProps = {
+  ref?: MutableRefObject<RNTextInput | null>;
+  item: InputItem;
+  index: number;
+  hideError?: boolean;
+  onError: (param: boolean) => void;
+};
+
+const StepInputItem = forwardRef(
+  (
+    { item, index, hideError = false, onError }: StepInputItemProps,
+    ref: ForwardedRef<RNTextInput>
+  ) => {
+    const { name, value, onChangeItem, errors, type } = item;
+
+    const isFirstInput = index === 0;
+    const errorMessage = handleValidate(value, errors);
+
+    const isError = errorMessage !== null;
+
+    console.log(errorMessage, isError);
+
+    useEffect(() => {
+      onError(isError);
+    }, [isError]);
+
+    switch (type) {
+      case 'number':
+        return (
+          <NumberInput
+            ref={isFirstInput ? ref : undefined}
+            style={styles.textInput}
+            placeholder={name}
+            numberValue={value}
+            onChangeNumber={(item) => onChangeItem(item as typeof value)}
+            isError={!hideError && isError}
+            errorMessage={errorMessage}
+          />
+        );
+      case 'date':
+        return (
+          <DateInput
+            ref={isFirstInput ? ref : undefined}
+            style={styles.textInput}
+            placeholder={name}
+            dateTime={value}
+            onChangeDate={(item) => onChangeItem(item as typeof value)}
+            isError={!hideError && isError}
+            errorMessage={errorMessage}
+          />
+        );
+      case 'string':
+        return (
+          <TextInput
+            ref={isFirstInput ? ref : undefined}
+            style={styles.textInput}
+            placeholder={name}
+            value={value}
+            onChangeText={(item) => onChangeItem(item as typeof value)}
+            isError={!hideError && isError}
+            errorMessage={errorMessage}
+          />
+        );
+      default:
+        break;
+    }
+  }
+);
+
 export default function StepInputLayout({
   inputList,
   numberOfSteps,
@@ -40,16 +146,50 @@ export default function StepInputLayout({
   onNext,
   onSubmit,
 }: Props) {
-  const firstInputRef = useRef<any>();
+  const [isFirstTimeClickButton, setIsFirstTimeClickButton] =
+    useState<boolean>(true);
+  const [errorCountBooleanList, setErrorCountBooleanList] = useState<boolean[]>(
+    []
+  );
+  const firstInputRef = useRef<RNTextInput>();
   const { isCanBack, isCanSubmit } = handleStepButtonState(
     currentStepIndex,
     numberOfSteps
   );
 
+  const isErrorInAStep =
+    errorCountBooleanList.filter((item) => !item).length <
+    inputList.data.length;
+
+  console.log(errorCountBooleanList, isErrorInAStep);
+
+  function handleBeforeNext() {
+    console.log(isFirstTimeClickButton, isErrorInAStep, errorCountBooleanList);
+    if (isFirstTimeClickButton) {
+      setIsFirstTimeClickButton(false);
+    }
+    if (isErrorInAStep) return;
+    onNext();
+  }
+
+  function handleBeforeSubmit() {
+    if (isFirstTimeClickButton) {
+      setIsFirstTimeClickButton(false);
+    }
+    if (isErrorInAStep) return;
+    onSubmit();
+  }
+
+  function handleBeforeBack() {
+    onBack();
+  }
+
   useEffect(() => {
     if (firstInputRef.current) {
       firstInputRef.current.focus();
     }
+    setErrorCountBooleanList([])
+    setIsFirstTimeClickButton(true);
   }, [currentStepIndex]);
 
   return (
@@ -84,46 +224,45 @@ export default function StepInputLayout({
       <FlatList
         contentContainerStyle={{ gap: 10, paddingVertical: 10 }}
         data={inputList.data}
-        renderItem={({ item, index }) => {
-          const isFirstInput = index === 0;
+        renderItem={({ item, index }) => (
+          <StepInputItem
+            ref={index === 0 ? firstInputRef : undefined}
+            item={item}
+            index={index}
+            hideError={isFirstTimeClickButton}
+            onError={(param) => {
+              console.log('ok ??');
 
-          switch (typeof item.item) {
-            case 'number':
-              return (
-                <NumberInput
-                  ref={isFirstInput ? firstInputRef : undefined}
-                  style={styles.textInput}
-                  placeholder={item.name}
-                  numberValue={item.item}
-                  onChangeNumber={item.onChangeItem}
-                />
+              let tempBooleanList =
+                errorCountBooleanList.length === 0
+                  ? Array.from({ length: inputList.data.length }, () => true)
+                  : errorCountBooleanList;
+
+              tempBooleanList = tempBooleanList.map(
+                (booleanErrorItem, booleanErrorIndex) => {
+                  if (index === booleanErrorIndex) {
+                    return param;
+                  }
+                  return booleanErrorItem;
+                }
               );
-            case 'string':
-              return (
-                <TextInput
-                  ref={isFirstInput ? firstInputRef : undefined}
-                  style={styles.textInput}
-                  placeholder={item.name}
-                  value={item.item}
-                  onChangeText={item.onChangeItem}
-                />
-              );
-            default:
-              break;
-          }
-        }}
+              console.log('tempData', tempBooleanList, tempBooleanList.length);
+              setErrorCountBooleanList(tempBooleanList);
+            }}
+          />
+        )}
       />
 
       <View style={{ gap: 10, paddingVertical: 10 }}>
         {isCanBack ? (
-          <TextButton variant="secondary" onPress={onBack}>
+          <TextButton variant="secondary" onPress={handleBeforeBack}>
             Back
           </TextButton>
         ) : null}
         {isCanSubmit ? (
-          <TextButton onPress={onSubmit}>Submit</TextButton>
+          <TextButton onPress={handleBeforeSubmit}>Submit</TextButton>
         ) : (
-          <TextButton onPress={onNext}>Next</TextButton>
+          <TextButton onPress={handleBeforeNext}>Next</TextButton>
         )}
       </View>
     </View>
@@ -135,10 +274,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingVertical: 15,
     paddingHorizontal: 10,
-    borderRadius: 10,
-    borderColor: '#ddd',
-  },
-  focus: {
-    borderColor: '#000',
+    borderRadius: Sizes.borderRadiusTextInput,
+    borderColor: Colors.border,
   },
 });

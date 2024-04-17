@@ -1,6 +1,9 @@
 import { LegacyRef, forwardRef } from 'react';
-import { TextInputProps, TextInput as RNTextInput } from 'react-native';
-import TextInput from '../TextInput/TextInput';
+import {
+  TextInput as RNTextInput,
+  TextInputProps as RNTextInputProps,
+} from 'react-native';
+import TextInput, { TextInputProps } from '../TextInput/TextInput';
 
 type Props = Omit<TextInputProps, 'onChangeText, keyboardType,value'> & {
   numberValue: number;

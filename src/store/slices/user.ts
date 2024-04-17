@@ -23,6 +23,7 @@ export type State = {
   limit: number;
   current: number;
   createAt: number;
+  activitiesLevel: number;
   weightList: {
     value: number;
     dataPointText: string;
@@ -44,6 +45,7 @@ const initialState: State = {
   numberOfMeals: 0,
   goalWeight: 0,
   createWeight: 0,
+  activitiesLevel: 0,
   total: 0,
   limit: 0,
   current: 0,
@@ -76,6 +78,9 @@ const userSlice = createSlice({
     },
     updateWeight(state, action: { payload: number }) {
       state.weight = action.payload;
+    },
+    updateActivitiesLevel(state, action: { payload: number }) {
+      state.activitiesLevel = action.payload;
     },
     updateCalories(
       state,
@@ -115,5 +120,6 @@ export const {
   updateCalories,
   addCaloriesList,
   addWeightList,
+  updateActivitiesLevel
 } = userSlice.actions;
 export const user = userSlice.reducer;

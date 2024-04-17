@@ -1,15 +1,18 @@
 import { ReactNode } from 'react';
 import { Button as RNButton, Text, TouchableOpacity } from 'react-native';
-import Icon from '../../Icon/Icon';
-import { Colors } from '../../../constants';
+import { Colors } from '../../../assets';
 
 export type ButtonType = 'primary' | 'secondary';
 type Props = {
   children: ReactNode;
   onPress: () => void;
-  variant: ButtonType;
+  variant?: ButtonType;
 };
-export default function Button({ children, onPress, variant }: Props) {
+export default function Button({
+  children,
+  onPress,
+  variant = 'primary',
+}: Props) {
   let backgroundColor;
   switch (variant) {
     case 'primary':
@@ -35,6 +38,8 @@ export default function Button({ children, onPress, variant }: Props) {
         paddingHorizontal: 20,
         paddingVertical: 15,
         borderRadius: 10,
+
+
       }}
       onPress={onPress}
     >

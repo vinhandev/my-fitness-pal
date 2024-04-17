@@ -11,6 +11,9 @@ import { FontWeights } from '../../assets';
 
 export default function DashboardScreen() {
   const weight = useSelector((state: { user: State }) => state.user.weight);
+  const weightList = useSelector(
+    (state: { user: State }) => state.user.weightList
+  );
   const mealsList = useSelector(
     (state: { user: State }) => state.user.mealsList
   );
@@ -32,6 +35,9 @@ export default function DashboardScreen() {
     (state: { user: State }) => state.user.createWeight
   );
   const name = useSelector((state: { user: State }) => state.user.name);
+  const activitiesLevel = useSelector(
+    (state: { user: State }) => state.user.activitiesLevel
+  );
   const dispatch = useDispatch();
 
   const dayCount = Math.ceil((deadlineTime - createAt) / 1000 / 60 / 60 / 24);
@@ -46,7 +52,7 @@ export default function DashboardScreen() {
 
   const currentTotalCalories = totalCalories - (weight - goalWeight) * 7700;
 
-  const age = new Date().getFullYear() - yearOfBirth;
+  const age = new Date().getFullYear() - new Date(yearOfBirth).getFullYear();
 
   const handleNavigateToday = () => {
     router.push('/today');
@@ -57,9 +63,12 @@ export default function DashboardScreen() {
   };
 
   const getBMR = () => {
-    const BMR = (88.362 + 13.397 * weight + 4.799 * height - 5.677 * age) * 1.5;
+    const BMR =
+      (88.362 + 13.397 * weight + 4.799 * height - 5.677 * age) *
+      activitiesLevel;
     const total = BMR;
     const limit = BMR - ((weight - goalWeight) * 7700) / dayCount;
+    console.log('BMR', BMR, height, age);
 
     const tempCurrent = mealsList.reduce(
       (a, b) => a + b.meals.reduce((c, d) => c + d.calories, 0),
@@ -74,7 +83,9 @@ export default function DashboardScreen() {
 
   useEffect(() => {
     getBMR();
-  }, [mealsList]);
+  }, [mealsList, activitiesLevel]);
+
+  console.log(current, limit, total, weight, goalWeight);
 
   return (
     <SafeAreaView
@@ -209,13 +220,10 @@ export default function DashboardScreen() {
             }}
             width={280}
             height={280}
-            data={[
-              { value: 80, dataPointText: '80 kg' },
-              { value: 72, dataPointText: '80 kg' },
-              { value: 70, dataPointText: '80 kg' },
-              { value: 65, dataPointText: '80 kg' },
-              { value: 30, dataPointText: '80 kg' },
-            ]}
+            data={weightList.map((item) => ({
+              value: item.value,
+              dataPointText: item.dataPointText,
+            }))}
           />
         </View>
         <View style={{ gap: 10 }}>

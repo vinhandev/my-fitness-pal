@@ -1,8 +1,19 @@
-export const Colors = {
+const ColorsByName = {
   black: '#000',
   white: '#fff',
-  primary: '#0066ED',
+  grey: '#ddd',
+  red: '#FF204E',
+};
+
+export const Colors = {
+  ...ColorsByName,
+
+  primary: '#33399C',
   secondary: '#16D372',
+
+  border: ColorsByName.grey,
+  borderWhenFocus: ColorsByName.black,
+  borderWhenError: ColorsByName.red,
 
   neutral: '#F2F2F2',
   neutral2: '#ECEBF1',

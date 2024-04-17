@@ -9,6 +9,7 @@ export const Sizes = {
   exSmall: 12,
 
   borderRadius: 20,
+  borderRadiusTextInput: 15,
 
   clickableSize: 50,
 } as const;

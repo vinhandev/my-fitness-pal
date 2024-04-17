@@ -1,9 +1,17 @@
 import React from 'react';
 
-import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Dimensions,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 import { styles } from './Today.styles';
 import {
+  Button,
   Calories,
   DashboardAds,
   FoodLogger,
@@ -14,12 +22,20 @@ import { MealData } from '../../types';
 import { router } from 'expo-router';
 import { useGetFoodByDateApi } from '../../hooks';
 import { useDispatch, useSelector } from 'react-redux';
-import { State, addCaloriesList } from '../../store/slices';
+import {
+  State,
+  addCaloriesList,
+  updateActivitiesLevel,
+} from '../../store/slices';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ProgressBar from '../../components/ProgressBar/ProgressBar';
+import TextButton from '../../components/Buttons/TextButton/TextButton';
 
 export default function Dashboard() {
   const dispatch = useDispatch();
+  const activitiesLevel = useSelector(
+    (state: { user: State }) => state.user.activitiesLevel
+  );
   const meals = useSelector((state: { user: State }) => state.user.mealsList);
   const data: MealData[] =
     meals?.map((item) => ({
@@ -109,6 +125,78 @@ export default function Dashboard() {
           {new Date().toLocaleDateString()}
         </Text>
       </View>
+      <View
+        style={{
+          paddingHorizontal: 15,
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 14,
+            fontWeight: 'bold',
+          }}
+        >
+          Select your activites for today
+        </Text>
+        <View
+          style={{
+            width: Dimensions.get('window').width - 30,
+            flexDirection: 'row',
+            gap: 10,
+            paddingVertical: 10,
+          }}
+        >
+          {[
+            {
+              label: 'Not active',
+              value: 1,
+            },
+            {
+              label: 'Litte Exercise',
+              value: 1.25,
+            },
+            {
+              label: 'Active. 2-3 hours',
+              value: 1.5,
+            },
+            {
+              label: 'Full time ',
+              value: 1.75,
+            },
+          ].map((item, index) => (
+            <View
+              style={{
+                flex: 1,
+              }}
+            >
+              <Button
+                variant={activitiesLevel === item.value ? 'primary' : 'secondary'}
+                onPress={() => dispatch(updateActivitiesLevel(item.value))}
+              >
+                <View
+                  style={{
+                    width: '100%',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: 40,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: '#fff',
+                      fontWeight: 'bold',
+                      textAlign: 'center',
+                    }}
+                  >
+                    {item.label}
+                  </Text>
+                </View>
+              </Button>
+            </View>
+          ))}
+        </View>
+      </View>
       <FoodLogger meals={data} onAddFood={handleRedirectAddFood} />
 
       <View
@@ -151,6 +239,7 @@ export default function Dashboard() {
           </View>
           <ProgressBar current={current} limit={limit} />
         </View>
+
         <TouchableOpacity
           disabled={disabled}
           style={{

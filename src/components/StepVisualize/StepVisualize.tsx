@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { Colors } from '../../constants';
+import { Colors } from '../../assets';
 
 type Props = {
   currentStepIndex: number;

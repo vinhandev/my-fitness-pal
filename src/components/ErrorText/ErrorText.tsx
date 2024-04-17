@@ -1,11 +1,21 @@
 import { Text } from 'react-native';
+import { Colors } from '../../assets';
 
 type Props = {
   error: string;
-  invalid: boolean;
+  isError: boolean;
 };
-export default function ErrorText({ error, invalid }: Props) {
-  if (!invalid) return null;
+export default function ErrorText({ error, isError }: Props) {
+  if (!isError) return null;
 
-  return <Text>{error}</Text>;
+  return (
+    <Text
+      style={{
+        fontSize: 12,
+        color: Colors.red,
+      }}
+    >
+      {error}
+    </Text>
+  );
 }
