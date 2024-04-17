@@ -270,6 +270,7 @@ export default function Dashboard() {
           </Text>
         </TouchableOpacity>
       </View>
+      
     </SafeAreaView>
   );
 }

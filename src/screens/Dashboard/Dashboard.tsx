@@ -53,6 +53,10 @@ export default function DashboardScreen() {
   const totalCalories = (createWeight - goalWeight) * 7700;
 
   const currentTotalCalories = totalCalories - (weight - goalWeight) * 7700;
+  const currentTotalCaloriesByCalories = caloriesList.reduce(
+    (a, b) => a + b.calories,
+    0
+  );
 
   const age = new Date().getFullYear() - new Date(yearOfBirth).getFullYear();
 
@@ -127,7 +131,7 @@ export default function DashboardScreen() {
             backgroundColor: '#6F6CB3',
             borderRadius: 20,
             padding: 20,
-            height: 200,
+            height: 250,
             flexDirection: 'row',
             overflow: 'hidden',
           }}
@@ -140,25 +144,82 @@ export default function DashboardScreen() {
               Not give up.{'\n'}You can do it !
             </Text>
             <View>
-              <Text style={{ fontWeight: 'bold', color: '#fff', fontSize: 20 }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  paddingVertical: 10,
+                }}
+              >
                 <Text
-                  style={{ fontWeight: 'bold', color: '#fff', fontSize: 30 }}
+                  style={{
+                    fontSize: 15,
+                    fontWeight: '700',
+                    color: 'white',
+                  }}
                 >
-                  {currentTotalCalories}
+                  Progress by weight
                 </Text>
                 <Text
                   style={{
-                    fontWeight: '300',
-                    fontSize: 20,
+                    color: 'white',
                   }}
                 >
-                  {' '}
-                  /{' '}
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      fontWeight: '700',
+                      color: 'white',
+                    }}
+                  >
+                    {`${currentTotalCalories}/${totalCalories}`}
+                  </Text>{' '}
+                  kcal
                 </Text>
-                {Math.round(totalCalories)} kcal
-              </Text>
+              </View>
               <ProgressBar
                 current={currentTotalCalories}
+                limit={totalCalories}
+              />
+            </View>
+            <View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  paddingVertical: 10,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 15,
+                    fontWeight: '700',
+                    color: 'white',
+                  }}
+                >
+                  Progress by calories
+                </Text>
+                <Text
+                  style={{
+                    color: 'white',
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      fontWeight: '700',
+                      color: 'white',
+                    }}
+                  >
+                    {`${currentTotalCaloriesByCalories}/${totalCalories}`}
+                  </Text>{' '}
+                  kcal
+                </Text>
+              </View>
+              <ProgressBar
+                current={currentTotalCaloriesByCalories}
                 limit={totalCalories}
               />
             </View>
@@ -167,8 +228,8 @@ export default function DashboardScreen() {
           <View
             style={{
               position: 'absolute',
-              top: -40,
-              right: -40,
+              top: -90,
+              right: 0,
               shadowColor: '#000',
               shadowOffset: {
                 width: 0,
