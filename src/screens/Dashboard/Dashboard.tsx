@@ -41,7 +41,7 @@ export default function DashboardScreen() {
     (state: { user: State }) => state.user.activitiesLevel
   );
   const dispatch = useDispatch();
-
+  console.log(new Date(deadlineTime), createAt);
   const dayCount = Math.ceil((deadlineTime - createAt) / 1000 / 60 / 60 / 24);
   const dayStreak = Math.ceil(
     (new Date().getTime() - createAt) / 1000 / 60 / 60 / 24
@@ -134,7 +134,7 @@ export default function DashboardScreen() {
         >
           <View style={{ flex: 1, justifyContent: 'space-between' }}>
             <Text style={{ fontWeight: '400', color: '#fff' }}>
-              Day {dayStreak} / {dayCount}{' '}
+              Day {dayStreak} / {dayCount}
             </Text>
             <Text style={{ fontWeight: 'bold', color: '#fff', fontSize: 22 }}>
               Not give up.{'\n'}You can do it !

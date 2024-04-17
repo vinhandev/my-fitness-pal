@@ -17,7 +17,7 @@ type Props = {
 };
 
 const Meal = ({ meal, onAdd }: { meal: MealData; onAdd: () => void }) => {
- const { foods, kcal, name } = meal;
+  const { foods, kcal, name } = meal;
   return (
     <View style={styles.item}>
       <View
@@ -50,9 +50,10 @@ const Meal = ({ meal, onAdd }: { meal: MealData; onAdd: () => void }) => {
       </View>
       <FlatList
         data={foods}
-        renderItem={({ item }) => <Food food={item} variant="log" />}
+        renderItem={({ item, index }) => (
+          <Food key={index} food={item} variant="log" />
+        )}
       />
-     
     </View>
   );
 };
@@ -61,8 +62,8 @@ export default function FoodLogger({ meals, onAddFood }: Props) {
     <FlatList
       contentContainerStyle={styles.list}
       data={meals}
-      renderItem={({ item }) => (
-        <Meal key={item.name} meal={item} onAdd={onAddFood} />
+      renderItem={({ item, index }) => (
+        <Meal key={index} meal={item} onAdd={onAddFood} />
       )}
     />
   );

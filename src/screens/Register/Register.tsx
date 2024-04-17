@@ -242,8 +242,8 @@ export default function RegisterScreen() {
               onValidate: (item) => item === 0,
             },
             {
-              message: 'Deadline must be greater than current time',
-              onValidate: (item) => item < new Date().getTime(),
+              message: 'Deadline must be greater than current day 7 day',
+              onValidate: (item) => item <  new Date().getTime() + 7 * 24 * 60 * 60 * 1000,
             },
           ],
         },

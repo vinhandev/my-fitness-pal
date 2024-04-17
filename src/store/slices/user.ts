@@ -64,6 +64,11 @@ const userSlice = createSlice({
       state,
       action: { payload: Omit<State, 'weightList, caloriesList'> }
     ) {
+      console.log(
+        'payload',
+        action.payload.deadlineTime,
+        action.payload.createAt
+      );
       state.name = action.payload.name;
       state.weight = action.payload.weight;
       state.goalWeight = action.payload.goalWeight;

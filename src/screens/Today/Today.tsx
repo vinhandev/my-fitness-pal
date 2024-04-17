@@ -136,7 +136,7 @@ export default function Dashboard() {
             fontWeight: 'bold',
           }}
         >
-          Select your activites for today
+          Select your activity levels for today
         </Text>
         <View
           style={{
