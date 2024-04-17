@@ -26,6 +26,7 @@ export default function SwipeSelector({
 
   const metricsList: number[] = [];
   for (let index = 0; index <= listLength; index++) {
+    console.log('data', index + step + min);
     metricsList.push(index * step + min);
   }
 
@@ -42,6 +43,11 @@ export default function SwipeSelector({
     }
   }, []);
 
+  console.log(
+    Dimensions.get('window').width * 0.5 - 1,
+    Dimensions.get('window').width * 0.5
+  );
+
   return (
     <View
       style={{
@@ -53,10 +59,10 @@ export default function SwipeSelector({
         style={{
           width: 0.5,
           height: 30,
-          backgroundColor: 'red',
           position: 'absolute',
           alignSelf: 'center',
           zIndex: 1,
+          backgroundColor: 'red',
         }}
       />
       <View
@@ -79,7 +85,7 @@ export default function SwipeSelector({
             style={{
               flexDirection: 'row',
               paddingLeft: Dimensions.get('window').width * 0.5,
-              paddingRight: Dimensions.get('window').width * 0.5 - 1,
+              paddingRight: Dimensions.get('window').width * 0.5,
               alignItems: 'flex-end',
             }}
           >

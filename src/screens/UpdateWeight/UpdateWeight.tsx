@@ -41,12 +41,17 @@ export default function UpdateWeight() {
           flex: 1,
           justifyContent: 'space-between',
           gap: 10,
-          paddingHorizontal: 14,
         }}
       >
-        <TouchableOpacity onPress={() => router.back()}>
-          <Icon variant="back" size={20} color="#000" />
-        </TouchableOpacity>
+        <View
+          style={{
+            paddingHorizontal: 14,
+          }}
+        >
+          <TouchableOpacity onPress={() => router.back()}>
+            <Icon variant="back" size={20} color="#000" />
+          </TouchableOpacity>
+        </View>
         <View style={{ gap: 10 }}>
           <Text
             style={{
@@ -67,7 +72,13 @@ export default function UpdateWeight() {
             defaultValue={currentWeight}
           />
         </View>
-        <TextButton onPress={handleUpdate}>Update</TextButton>
+        <View
+          style={{
+            paddingHorizontal: 14,
+          }}
+        >
+          <TextButton onPress={handleUpdate}>Update</TextButton>
+        </View>
       </View>
     </SafeAreaView>
   );
