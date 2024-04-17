@@ -61,8 +61,6 @@ export default function DashboardScreen() {
     const total = BMR;
     const limit = BMR - ((weight - goalWeight) * 7700) / dayCount;
 
-    console.log(BMR, limit);
-
     const tempCurrent = mealsList.reduce(
       (a, b) => a + b.meals.reduce((c, d) => c + d.calories, 0),
       0

@@ -31,8 +31,6 @@ export default function SwipeSelector({
 
   useEffect(() => {
     if (ref.current) {
-      console.log('??', Math.round((current - min) / step) * itemWidth);
-
       setTimeout(
         () =>
           ref.current.scrollTo({

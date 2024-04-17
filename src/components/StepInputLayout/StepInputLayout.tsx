@@ -87,8 +87,6 @@ export default function StepInputLayout({
         renderItem={({ item, index }) => {
           const isFirstInput = index === 0;
 
-          console.log('step', isFirstInput, item);
-
           switch (typeof item.item) {
             case 'number':
               return (

@@ -21,7 +21,6 @@ import ProgressBar from '../../components/ProgressBar/ProgressBar';
 export default function Dashboard() {
   const dispatch = useDispatch();
   const meals = useSelector((state: { user: State }) => state.user.mealsList);
-  console.log(meals);
   const data: MealData[] =
     meals?.map((item) => ({
       name: item?.mealName,
