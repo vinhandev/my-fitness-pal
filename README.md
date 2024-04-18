@@ -13,21 +13,21 @@ Additional features:
 ## Screenshots
 
 <div style="display: flex; flex-direction: 'row';">
-<img src="./screenshots/1.png" width=20%>
-<img src="./screenshots/2.png" width=20%>
-<img src="./screenshots/3.png" width=20%>
-<img src="./screenshots/4.png" width=20%>
-<img src="./screenshots/5.png" width=20%>
-<img src="./screenshots/6.png" width=20%>
+<img src="./screenshots/1.png" width=19%>
+<img src="./screenshots/2.png" width=19%>
+<img src="./screenshots/3.png" width=19%>
+<img src="./screenshots/4.png" width=19%>
+<img src="./screenshots/5.png" width=19%>
+<img src="./screenshots/6.png" width=19%>
 
 </div>
 
 ## Demo
 
 <div style="display: flex; flex-direction: 'row';">
-<img src="./screenshots/registration.gif" width=33%>
-<img src="./screenshots/update_meals.gif" width=33%>
-<img src="./screenshots/update_weight.gif" width=33%>
+<img src="./screenshots/registration.gif" width=32%>
+<img src="./screenshots/update_meals.gif" width=32%>
+<img src="./screenshots/update_weight.gif" width=32%>
 
 
 </div>
