@@ -25,9 +25,9 @@ Additional features:
 ## Demo
 
 <div style="display: flex; flex-direction: 'row';">
-<img src="./screenshots/registration.gif" width=30%>
-<img src="./screenshots/update_meals.gif" width=30%>
-<img src="./screenshots/update_weight.gif" width=30%>
+<img src="./screenshots/registration.gif" width=33%>
+<img src="./screenshots/update_meals.gif" width=33%>
+<img src="./screenshots/update_weight.gif" width=33%>
 
 
 </div>
