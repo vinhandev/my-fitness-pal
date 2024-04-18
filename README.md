@@ -1,3 +1,4 @@
+<img src="./screenshots/header.png" width=100%>
 # Count clatories in everyday meals with Stepzen
 
 This is a React Native Fitness Pal , using API edamam and Stepzen for backend graphql and database.
