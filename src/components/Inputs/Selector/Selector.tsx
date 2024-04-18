@@ -40,9 +40,10 @@ export default function Selector({ data, onChange, value }: Props) {
       </TouchableOpacity>
       <SelectModal open={open} onOpen={setOpen} onSubmit={handleOpenModal}>
         <View style={styles.containerModal}>
-          {data.map((item) => {
+          {data.map((item, index) => {
             return (
               <View
+                key={index}
                 style={{
                   backgroundColor: value === item.value ? '#ddd' : '#fff',
                   padding: 10,

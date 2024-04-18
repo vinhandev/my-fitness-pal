@@ -23,20 +23,24 @@ export default function Foods({ data, onAddFood, loading }: Props) {
         </View>
       }
       contentContainerStyle={styles.list}
+      showsVerticalScrollIndicator={false}
       data={data}
-      renderItem={({ item }) => (
-        <Food
-          key={item.name}
-          variant="add"
-          food={item}
-          onAddFood={(quantity) =>
-            onAddFood({
-              ...item,
-              kcal: quantity * item.kcal,
-            })
-          }
-        />
-      )}
+      keyExtractor={(item, index) => index.toString()}
+      renderItem={({ item, index }) => {
+        return (
+          <Food
+            key={index}
+            variant="add"
+            food={item}
+            onAddFood={(quantity) =>
+              onAddFood({
+                ...item,
+                kcal: quantity * item.kcal,
+              })
+            }
+          />
+        );
+      }}
     />
   );
 }

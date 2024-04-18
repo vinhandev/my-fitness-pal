@@ -13,11 +13,11 @@ type Props = {
 export default function NavigationBar({ data, onChangeType, type }: Props) {
   return (
     <View style={styles.container}>
-      {data?.map((item) => {
+      {data?.map((item, index) => {
         return (
           <TouchableOpacity
-            key={item.label}
-            style={[styles.item,type === item.value && styles.itemActive]}
+            key={index}
+            style={[styles.item, type === item.value && styles.itemActive]}
             onPress={() => onChangeType(item.value)}
           >
             <Text
