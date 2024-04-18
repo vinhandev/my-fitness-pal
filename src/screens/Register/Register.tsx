@@ -58,13 +58,22 @@ export default function RegisterScreen() {
   };
 
   const handleGetCaloriesInOneDay = () => {
+    const bmr = calculateBMR(
+      data.gender,
+      data.weight,
+      data.height,
+      getAgeFromDate(new Date(data.yearOfBirth)),
+      1
+    );
     const dayCount =
       (new Date(data.deadlineTime).getTime() - new Date().getTime()) /
       24 /
       60 /
       60 /
       1000;
-    return Math.round(((data.weight - data.goalWeight) * 7700) / dayCount);
+    return (
+      bmr - Math.round(((data.weight - data.goalWeight) * 7700) / dayCount)
+    );
   };
 
   const handleInitInformation = () => {
