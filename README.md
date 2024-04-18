@@ -17,7 +17,7 @@ Additional features:
 <img src="./screenshots/2.png" width=19%>
 <img src="./screenshots/3img2.png" width=19%>
 <img src="./screenshots/4.png" width=19%>
-<img src="./screenshots/5.png" width=19%>
+<img src="./screenshots/5img.png" width=19%>
 
 </div>
 
