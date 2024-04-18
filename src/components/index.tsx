@@ -22,3 +22,6 @@ export { default as FoodLogger } from './Dashboard/FoodLogger/FoodLogger';
 
 // onboarding
 export { default as Background } from './Background/Background';
+
+// modal
+export { default as SelectModal } from './SelectModal/SelectModal';

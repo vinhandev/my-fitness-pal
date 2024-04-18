@@ -8,20 +8,28 @@ import {
 } from 'react-native';
 import TextInput, { TextInputProps } from '../TextInput/TextInput';
 import DateTimePicker from '@react-native-community/datetimepicker';
-type Props = Omit<TextInputProps, 'onChangeText, keyboardType,value'> & {
+import SelectModal from '../../SelectModal/SelectModal';
+type Props = Omit<
+  TextInputProps,
+  'onChangeText' | 'keyboardType' | 'value' | 'defaultValue'
+> & {
   dateTime: number;
   onChangeDate: (item: number) => void;
+  defaultValue?: number;
 };
 const DateInput = forwardRef(
   (
-    { dateTime, onChangeDate, ...props }: Props,
+    { dateTime, onChangeDate, defaultValue = 0, ...props }: Props,
     ref: LegacyRef<RNTextInput>
   ) => {
+    const initDate =
+      defaultValue === 0 ? '2000-01-01T00:00:00.000Z' : defaultValue;
+
     const [open, setOpen] = useState<boolean>(false);
-    const [tempDate, setTempDate] = useState<Date>( new Date('2000-01-01T00:00:00.000Z'));
+    const [tempDate, setTempDate] = useState<Date>(new Date(initDate));
 
     const numberToDate = new Date(dateTime);
-    const handleChangeItem = () => {
+    const handleConfirm = () => {
       onChangeDate(tempDate.getTime());
       handleOpen();
     };
@@ -43,59 +51,27 @@ const DateInput = forwardRef(
     return (
       <View>
         <TextInput
+          {...props}
           ref={ref}
           value={
             dateTime === 0
               ? ''
-              : `${numberToDate.getDate()}/${numberToDate.getMonth()}/${numberToDate.getFullYear()}`
+              : `${numberToDate.getDate()}/${
+                  numberToDate.getMonth() + 1
+                }/${numberToDate.getFullYear()}`
           }
           onFocus={() => setOpen(true)}
           onPressIn={() => setOpen(true)}
-          {...props}
         />
-        <Modal visible={open} transparent>
-          <View
-            style={{
-              flex: 1,
-              justifyContent: 'flex-end',
-              backgroundColor: '#00000055',
-            }}
-          >
-            <View
-              style={{
-                backgroundColor: 'white',
-                gap: 10,
-              }}
-            >
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: 10,
-                  borderBottomWidth: 1,
-                  borderColor: '#ddd',
-                }}
-              >
-                <Button title="Cancel" onPress={handleOpen} />
-                <Button title="Set" onPress={handleChangeItem} />
-              </View>
-              <View
-                style={{
-                  paddingBottom: 50,
-                }}
-              >
-                <DateTimePicker
-                  display="spinner"
-                  mode="date"
-                  value={tempDate}
-                  is24Hour
-                  onChange={(_, date) => handleChangeTempDate(date)}
-                />
-              </View>
-            </View>
-          </View>
-        </Modal>
+        <SelectModal open={open} onOpen={setOpen} onSubmit={handleConfirm}>
+          <DateTimePicker
+            display="spinner"
+            mode="date"
+            value={tempDate}
+            is24Hour
+            onChange={(_, date) => handleChangeTempDate(date)}
+          />
+        </SelectModal>
       </View>
     );
   }

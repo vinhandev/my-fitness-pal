@@ -3,13 +3,13 @@ import Button from '../Button/Button';
 import Icon, { IconVariants } from '../../Icon/Icon';
 
 type Props = {
-  children: string;
+  children?: string;
   onPress: () => void;
   icon?: IconVariants;
   variant?: 'primary' | 'secondary';
 };
 export default function TextButton({
-  children,
+  children = '',
   icon,
   onPress,
   variant = 'primary',
@@ -36,16 +36,18 @@ export default function TextButton({
         }}
       >
         {icon ? <Icon color="#fff" size={20} variant={icon} /> : null}
-        <Text
-          style={{
-            fontSize: 16,
-            fontWeight: 'bold',
-            color,
-            textAlign: 'center',
-          }}
-        >
-          {children}
-        </Text>
+        {children ? (
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: 'bold',
+              color,
+              textAlign: 'center',
+            }}
+          >
+            {children}
+          </Text>
+        ) : null}
       </View>
     </Button>
   );

@@ -9,6 +9,7 @@ export type IconVariants =
   | 'back'
   | 'search'
   | 'plus'
+  | 'minus'
   | 'verified'
   | 'down'
   | 'close'
@@ -41,6 +42,8 @@ export default function Icon({ color, size, variant }: Props) {
       return <MaterialIcons name="verified-user" size={size} color={color} />;
     case 'plus':
       return <Ionicons name="add" size={size} color={color} />;
+    case 'minus':
+      return <Ionicons name="remove" size={size} color={color} />;
     case 'down':
       return <Ionicons name="caret-down-sharp" size={size} color={color} />;
     case 'close':

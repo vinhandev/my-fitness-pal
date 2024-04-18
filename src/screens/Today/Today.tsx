@@ -26,6 +26,7 @@ import {
   State,
   addCaloriesList,
   updateActivitiesLevel,
+  updateMeals,
 } from '../../store/slices';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ProgressBar from '../../components/ProgressBar/ProgressBar';
@@ -62,6 +63,22 @@ export default function Dashboard() {
     router.push('/search');
   };
 
+  const handleRemoveFood = (mealIndex: number, foodIndex: number) => {
+    const tmpMeals = meals.map((item, index) => {
+      if (index === mealIndex) {
+        return {
+          ...item,
+          meals: item.meals.filter((_, index) => index !== foodIndex),
+        };
+      }
+      return item;
+    });
+
+    console.log(mealIndex, foodIndex, tmpMeals);
+
+    dispatch(updateMeals(tmpMeals));
+  };
+
   const isSameDay = (date1: Date, date2: Date) => {
     return (
       date1.getFullYear() === date2.getFullYear() &&
@@ -77,6 +94,8 @@ export default function Dashboard() {
       new Date(),
       new Date(caloriesList?.[caloriesList?.length - 1]?.date)
     );
+
+  console.log(current, limit);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -152,25 +171,28 @@ export default function Dashboard() {
               value: 1,
             },
             {
-              label: 'Litte Exercise',
+              label: 'Lightly active',
               value: 1.25,
             },
             {
-              label: 'Active. 2-3 hours',
+              label: 'Active',
               value: 1.5,
             },
             {
-              label: 'Full time ',
+              label: 'Very active ',
               value: 1.75,
             },
           ].map((item, index) => (
             <View
+              key={index}
               style={{
                 flex: 1,
               }}
             >
               <Button
-                variant={activitiesLevel === item.value ? 'primary' : 'secondary'}
+                variant={
+                  activitiesLevel === item.value ? 'primary' : 'secondary'
+                }
                 onPress={() => dispatch(updateActivitiesLevel(item.value))}
               >
                 <View
@@ -179,11 +201,12 @@ export default function Dashboard() {
                     justifyContent: 'center',
                     alignItems: 'center',
                     height: 40,
+                    // backgroundColor: 'red',
                   }}
                 >
                   <Text
                     style={{
-                      fontSize: 12,
+                      fontSize: 14,
                       color: '#fff',
                       fontWeight: 'bold',
                       textAlign: 'center',
@@ -197,7 +220,11 @@ export default function Dashboard() {
           ))}
         </View>
       </View>
-      <FoodLogger meals={data} onAddFood={handleRedirectAddFood} />
+      <FoodLogger
+        meals={data}
+        onAddFood={handleRedirectAddFood}
+        onRemoveFood={handleRemoveFood}
+      />
 
       <View
         style={{
@@ -270,7 +297,6 @@ export default function Dashboard() {
           </Text>
         </TouchableOpacity>
       </View>
-      
     </SafeAreaView>
   );
 }

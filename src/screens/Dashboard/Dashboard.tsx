@@ -6,6 +6,7 @@ import { router } from 'expo-router';
 import TextButton from '../../components/Buttons/TextButton/TextButton';
 import ProgressBar from '../../components/ProgressBar/ProgressBar';
 import { LineChart } from 'react-native-gifted-charts';
+import { calculateBMR } from '../../utils';
 
 export default function DashboardScreen() {
   const weight = useSelector((state: { user: State }) => state.user.weight);
@@ -69,15 +70,17 @@ export default function DashboardScreen() {
   };
 
   const getBMR = () => {
-    const BMR =
-      gender === 0
-        ? (88.362 + 13.397 * weight + 4.799 * height - 5.677 * age) *
-          activitiesLevel
-        : (447.593 + 9.247 * weight + 3.098 * height - 4.33 * age) *
-          activitiesLevel;
+    const BMR = calculateBMR(gender, weight, height, age, activitiesLevel);
     const total = BMR;
     const limit = BMR - ((weight - goalWeight) * 7700) / dayCount;
-    console.log('BMR', BMR, height, age);
+
+    console.log(
+      'BMR',
+      BMR,
+      total,
+      limit,
+      ((weight - goalWeight) * 7700) / dayCount
+    );
 
     const tempCurrent = mealsList.reduce(
       (a, b) => a + b.meals.reduce((c, d) => c + d.calories, 0),

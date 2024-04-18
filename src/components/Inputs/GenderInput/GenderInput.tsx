@@ -8,80 +8,84 @@ import {
 } from 'react-native';
 import TextInput, { TextInputProps } from '../TextInput/TextInput';
 import { getValueByVariableList } from '../../../utils';
-type Props = Omit<TextInputProps, 'onChangeText, keyboardType,value'> & {
+import SelectModal from '../../SelectModal/SelectModal';
+
+export const GenderList = {
+  MALE: 0,
+  FEMALE: 1,
+};
+
+type Props = Omit<
+  TextInputProps,
+  'onChangeText' | ' keyboardType' | 'value' | 'defaultValue'
+> & {
   gender: number;
   onChangeGender: (item: number) => void;
+  defaultValue?: number;
 };
 const GenderInput = forwardRef(
   (
-    { gender, onChangeGender, ...props }: Props,
+    { gender, onChangeGender, defaultValue = 0, ...props }: Props,
     ref: LegacyRef<RNTextInput>
   ) => {
     const [open, setOpen] = useState<boolean>(false);
-
-    function handleOpen() {
-      setOpen(!open);
-    }
+    const [tempGender, setTempGender] = useState<number>(defaultValue);
 
     const genderString = getValueByVariableList(gender, [
       {
-        compareVariable: 0,
+        compareVariable: GenderList.MALE,
         returnVariable: 'Male',
       },
       {
-        compareVariable: 1,
+        compareVariable: GenderList.FEMALE,
         returnVariable: 'Female',
       },
     ]);
 
     console.log('value', gender, genderString);
 
+    const handleSubmit = () => {
+      onChangeGender(tempGender);
+      setOpen(false);
+    };
+
+    const handleChangeGender = (paramGender: number) => {
+      setTempGender(paramGender);
+    };
+
     return (
       <View>
         <TextInput
+          {...props}
           ref={ref}
           value={genderString}
           onFocus={() => setOpen(true)}
           onPressIn={() => setOpen(true)}
-          {...props}
         />
-        <Modal visible={open} transparent>
-          <View
-            style={{
-              flex: 1,
-              justifyContent: 'flex-end',
-              backgroundColor: '#00000055',
-            }}
-          >
+        <SelectModal open={open} onOpen={setOpen} onSubmit={handleSubmit}>
+          <View>
             <View
               style={{
-                backgroundColor: 'white',
-                gap: 10,
+                backgroundColor: tempGender === 0 ? '#ddd' : '#fff',
               }}
             >
-              <View
-                style={{
-                  paddingBottom: 50,
-                }}
-              >
-                <Button
-                  title="Male"
-                  onPress={() => {
-                    onChangeGender(0);
-                    handleOpen();
-                  }}
-                />
-                <Button
-                  title="Female"
-                  onPress={() => {
-                    onChangeGender(1);
-                    handleOpen();
-                  }}
-                />
-              </View>
+              <Button
+                title="Male"
+                onPress={() => handleChangeGender(GenderList.MALE)}
+              />
+            </View>
+            <View
+              style={{
+                backgroundColor: tempGender === 1 ? '#ddd' : '#fff',
+              }}
+            >
+              <Button
+                title="Female"
+                onPress={() => handleChangeGender(GenderList.FEMALE)}
+              />
             </View>
           </View>
-        </Modal>
+        </SelectModal>
       </View>
     );
   }

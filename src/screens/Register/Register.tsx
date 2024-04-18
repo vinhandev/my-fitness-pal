@@ -1,4 +1,5 @@
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
   Text,
@@ -15,6 +16,7 @@ import StepInputLayout, {
 } from '../../components/StepInputLayout/StepInputLayout';
 import TextButton from '../../components/Buttons/TextButton/TextButton';
 import { router } from 'expo-router';
+import { calculateBMR, getAgeFromDate } from '../../utils';
 
 type FormData = {
   name: string;
@@ -35,10 +37,35 @@ export default function RegisterScreen() {
     height: 0,
     weight: 0,
     goalWeight: 0,
-    deadlineTime: 0,
+    deadlineTime: new Date().getTime() + 15 * 24 * 60 * 60 * 1000,
     numberOfMealInDay: 0,
     gender: 0,
   });
+
+  const handleGetAtLeastLoseWeightDeadline = (goalWeight: number) => {
+    const AT_LEAST_CALORIES_IN_A_DAY = 400;
+    return Math.round(
+      ((data.weight - goalWeight) * 7700) /
+        (calculateBMR(
+          data.gender,
+          data.weight,
+          data.height,
+          getAgeFromDate(new Date(data.yearOfBirth)),
+          1
+        ) -
+          AT_LEAST_CALORIES_IN_A_DAY)
+    );
+  };
+
+  const handleGetCaloriesInOneDay = () => {
+    const dayCount =
+      (new Date(data.deadlineTime).getTime() - new Date().getTime()) /
+      24 /
+      60 /
+      60 /
+      1000;
+    return Math.round(((data.weight - data.goalWeight) * 7700) / dayCount);
+  };
 
   const handleInitInformation = () => {
     const param: State = {
@@ -64,8 +91,24 @@ export default function RegisterScreen() {
       caloriesList: [],
       weightList: [],
     };
-    dispatch(registerInformation(param));
-    router.push('/dashboard');
+    Alert.alert(
+      'Register Confirm',
+      `Are you sure you want to register this plan?. This cannot be undone. Calories for a day at least ${handleGetCaloriesInOneDay()} kcal`,
+      [
+        {
+          text: 'OK',
+          onPress: () => {
+            dispatch(registerInformation(param));
+            router.push('/dashboard');
+          },
+        },
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+      ]
+    );
   };
 
   const textInputStepList: InputListProps[] = [
@@ -208,6 +251,13 @@ export default function RegisterScreen() {
               setData({
                 ...data,
                 goalWeight: item,
+                deadlineTime:
+                  new Date().getTime() +
+                  handleGetAtLeastLoseWeightDeadline(item) *
+                    24 *
+                    60 *
+                    60 *
+                    1000,
               });
           },
           errors: [
@@ -243,7 +293,21 @@ export default function RegisterScreen() {
             },
             {
               message: 'Deadline must be greater than current day 7 day',
-              onValidate: (item) => item <  new Date().getTime() + 7 * 24 * 60 * 60 * 1000,
+              onValidate: (item) =>
+                item < new Date().getTime() + 7 * 24 * 60 * 60 * 1000,
+            },
+            {
+              message: `Deadline is too short for lose weight. At least ${handleGetAtLeastLoseWeightDeadline(
+                data.goalWeight
+              )} days`,
+              onValidate: (item) =>
+                item <
+                new Date().getTime() +
+                  (handleGetAtLeastLoseWeightDeadline(data.goalWeight) - 1) *
+                    24 *
+                    60 *
+                    60 *
+                    1000,
             },
           ],
         },

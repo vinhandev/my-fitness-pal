@@ -56,6 +56,7 @@ const TextInput = forwardRef(
     return (
       <View style={{ gap: 10 }}>
         <RNTextInput
+          {...props}
           ref={ref}
           onFocus={handleOnFocus}
           onBlur={handleOnBlur}
@@ -65,7 +66,6 @@ const TextInput = forwardRef(
               borderColor,
             },
           ]}
-          {...props}
         />
         <ErrorText isError={isError} error={errorMessage} />
       </View>

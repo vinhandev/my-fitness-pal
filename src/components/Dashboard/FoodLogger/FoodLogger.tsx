@@ -14,9 +14,20 @@ import { State } from '../../../store/slices';
 type Props = {
   meals: MealData[];
   onAddFood: () => void;
+  onRemoveFood: (mealIndex: number, foodIndex: number) => void;
 };
 
-const Meal = ({ meal, onAdd }: { meal: MealData; onAdd: () => void }) => {
+const Meal = ({
+  meal,
+  index: mealIndex,
+  onAdd,
+  onRemove,
+}: {
+  meal: MealData;
+  onAdd: () => void;
+  onRemove: (mealIndex: number, foodIndex: number) => void;
+  index: number;
+}) => {
   const { foods, kcal, name } = meal;
   return (
     <View style={styles.item}>
@@ -51,19 +62,30 @@ const Meal = ({ meal, onAdd }: { meal: MealData; onAdd: () => void }) => {
       <FlatList
         data={foods}
         renderItem={({ item, index }) => (
-          <Food key={index} food={item} variant="log" />
+          <Food
+            key={index}
+            food={item}
+            variant="log"
+            onRemoveFood={() => onRemove(mealIndex, index)}
+          />
         )}
       />
     </View>
   );
 };
-export default function FoodLogger({ meals, onAddFood }: Props) {
+export default function FoodLogger({ meals, onAddFood, onRemoveFood }: Props) {
   return (
     <FlatList
       contentContainerStyle={styles.list}
       data={meals}
       renderItem={({ item, index }) => (
-        <Meal key={index} meal={item} onAdd={onAddFood} />
+        <Meal
+          key={index}
+          index={index}
+          meal={item}
+          onAdd={onAddFood}
+          onRemove={onRemoveFood}
+        />
       )}
     />
   );
