@@ -88,6 +88,7 @@ export default function Dashboard() {
   };
 
   const disabled =
+    current > 0 &&
     caloriesList &&
     caloriesList?.length > 0 &&
     isSameDay(
@@ -221,6 +222,7 @@ export default function Dashboard() {
         </View>
       </View>
       <FoodLogger
+        disabled={disabled}
         meals={data}
         onAddFood={handleRedirectAddFood}
         onRemoveFood={handleRemoveFood}

@@ -1,12 +1,13 @@
 import React, { useMemo, useState } from 'react';
 
-import { Modal, Text, TouchableOpacity, View } from 'react-native';
+import { Button, Modal, Text, TouchableOpacity, View } from 'react-native';
 
 import { styles } from './Selector.styles';
 import { SelectorData } from '../../../types';
 import Icon from '../../Icon/Icon';
 import { Colors, Sizes } from '../../../assets';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import SelectModal from '../../SelectModal/SelectModal';
 
 type Props = {
   value: string;
@@ -37,20 +38,26 @@ export default function Selector({ data, onChange, value }: Props) {
           <Icon variant="down" size={Sizes.exSmall} color={Colors.primary} />
         </View>
       </TouchableOpacity>
-      <Modal visible={open}>
+      <SelectModal open={open} onOpen={setOpen} onSubmit={handleOpenModal}>
         <View style={styles.containerModal}>
           {data.map((item) => {
             return (
-              <TouchableOpacity
-                key={item.label}
-                onPress={() => handleChange(item.value)}
+              <View
+                style={{
+                  backgroundColor: value === item.value ? '#ddd' : '#fff',
+                  padding: 10,
+                }}
               >
-                <Text>{item.label}</Text>
-              </TouchableOpacity>
+                <Button
+                  key={item.label}
+                  onPress={() => handleChange(item.value)}
+                  title={item.label}
+                />
+              </View>
             );
           })}
         </View>
-      </Modal>
+      </SelectModal>
     </View>
   );
 }

@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 import { State } from '../../../store/slices';
 
 type Props = {
+  disabled?: boolean;
   meals: MealData[];
   onAddFood: () => void;
   onRemoveFood: (mealIndex: number, foodIndex: number) => void;
@@ -22,11 +23,13 @@ const Meal = ({
   index: mealIndex,
   onAdd,
   onRemove,
+  disabled = false,
 }: {
   meal: MealData;
   onAdd: () => void;
   onRemove: (mealIndex: number, foodIndex: number) => void;
   index: number;
+  disabled?: boolean;
 }) => {
   const { foods, kcal, name } = meal;
   return (
@@ -43,9 +46,11 @@ const Meal = ({
       >
         <View style={styles.btnTitle}>
           <Text style={styles.text1}>{name}</Text>
-          <TouchableOpacity style={styles.btnAddFood} onPress={onAdd}>
-            <Icon variant="plus" size={15} color="#fff" />
-          </TouchableOpacity>
+          {!disabled && (
+            <TouchableOpacity style={styles.btnAddFood} onPress={onAdd}>
+              <Icon variant="plus" size={15} color="#fff" />
+            </TouchableOpacity>
+          )}
         </View>
         <View>
           <Text
@@ -63,6 +68,7 @@ const Meal = ({
         data={foods}
         renderItem={({ item, index }) => (
           <Food
+            disabled={disabled}
             key={index}
             food={item}
             variant="log"
@@ -73,13 +79,19 @@ const Meal = ({
     </View>
   );
 };
-export default function FoodLogger({ meals, onAddFood, onRemoveFood }: Props) {
+export default function FoodLogger({
+  meals,
+  onAddFood,
+  onRemoveFood,
+  disabled,
+}: Props) {
   return (
     <FlatList
       contentContainerStyle={styles.list}
       data={meals}
       renderItem={({ item, index }) => (
         <Meal
+          disabled={disabled}
           key={index}
           index={index}
           meal={item}

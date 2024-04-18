@@ -8,10 +8,6 @@ export const styles = StyleSheet.create({
     gap: Sizes.gap,
   },
   containerModal: {
-    flex: 1,
-
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   text: {
     color: Colors.primary,

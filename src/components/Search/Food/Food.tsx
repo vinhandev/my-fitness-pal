@@ -11,6 +11,7 @@ import NumberInput from '../../Inputs/NumberInput/NumberInput';
 import TextButton from '../../Buttons/TextButton/TextButton';
 
 type Props = {
+  disabled?: boolean;
   food: FoodData;
 } & (
   | {
@@ -23,7 +24,7 @@ type Props = {
     }
 );
 export default function Food(props: Props) {
-  const { food, variant } = props;
+  const { food, variant, disabled } = props;
 
   const [open, setOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
@@ -142,18 +143,20 @@ export default function Food(props: Props) {
                   />
                 )}
               </Text>
-              <View>
-                <TouchableOpacity
-                  style={styles.icon}
-                  onPress={props.onRemoveFood}
-                >
-                  <Icon
-                    variant="minus"
-                    size={Sizes.bigIcon}
-                    color={Colors.primary}
-                  />
-                </TouchableOpacity>
-              </View>
+              {!disabled && (
+                <View>
+                  <TouchableOpacity
+                    style={styles.icon}
+                    onPress={props.onRemoveFood}
+                  >
+                    <Icon
+                      variant="minus"
+                      size={Sizes.bigIcon}
+                      color={Colors.primary}
+                    />
+                  </TouchableOpacity>
+                </View>
+              )}
             </View>
             <Text style={styles.text2}>{description}</Text>
           </View>
