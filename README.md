@@ -15,7 +15,7 @@ Additional features:
 <div style="display: flex; flex-direction: 'row';">
 <img src="./screenshots/1.png" width=19%>
 <img src="./screenshots/2.png" width=19%>
-<img src="./screenshots/3img.png" width=19%>
+<img src="./screenshots/3img2.png" width=19%>
 <img src="./screenshots/4.png" width=19%>
 <img src="./screenshots/5.png" width=19%>
 
