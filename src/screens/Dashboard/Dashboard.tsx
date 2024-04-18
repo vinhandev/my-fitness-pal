@@ -293,6 +293,28 @@ export default function DashboardScreen() {
                 item.date
               ).getDate()} / ${new Date(item.date).getMonth() + 1}`,
             }))}
+            // data={[
+            //   {
+            //     value: 85,
+            //     dataPointText: '85 kg',
+            //   },
+            //   {
+            //     value: 80,
+            //     dataPointText: '80 kg',
+            //   },
+            //   {
+            //     value: 79,
+            //     dataPointText: '79 kg',
+            //   },
+            //   {
+            //     value: 75,
+            //     dataPointText: '75 kg',
+            //   },
+            //   {
+            //     value: 70,
+            //     dataPointText: '70 kg',
+            //   },
+            // ]}
           />
         </View>
         <View style={{ gap: 10 }}>
